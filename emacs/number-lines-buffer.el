@@ -10,4 +10,3 @@
     (princ x mybuffer)
     (princ " "  mybuffer)
     (setq c (forward-line 1))))
-
