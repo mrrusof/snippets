@@ -13,7 +13,6 @@ def event(str):
 def failwith(str):
     if log:
         msg = '%s : %s' % (time.strftime('%Y.%M.%d %H:%M:%S'), str)
-        print msg
         utils.failwith(msg)
 
 def warn(str):
