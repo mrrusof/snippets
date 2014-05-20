@@ -9,6 +9,7 @@ typedef struct {
 int main() {
   // ... m = {4, 3, 0} <-- C89 initialization style
   MSG *mp, m = {4, 3, 2};
+  printf("sizeof(MSG) = %lu\n", sizeof(MSG));
   printf("m.a      = %d\nm.s[0]   = %d\nm.s[1]   = %d\n\n", m.a, m.s[0], m.s[1]);
   mp = (MSG *) malloc(sizeof(MSG));
   printf("mp->a    = %d\nmp->s[0] = %d\nmp->s[1] = %d\n\n", mp->a, mp->s[0], mp->s[1]);
