@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import sys
-import imaplib
-import email
+import imaplib                  # https://docs.python.org/2/library/imaplib.html, http://svn.python.org/view/python/trunk/Lib/imaplib.py?view=markup
+import email                    # https://docs.python.org/2/library/email.html,   http://svn.python.org/view/python/trunk/Lib/email/
 import log
 
 # 1. Fetch most recent email from imap.gmail.com
