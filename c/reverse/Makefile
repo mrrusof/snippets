@@ -1,5 +1,5 @@
 all:
-	gcc -o reverse reverse.c
+	gcc -o reverse.exe reverse.c
 
 clean:
-	rm -f reverse
+	rm -f reverse.exe
