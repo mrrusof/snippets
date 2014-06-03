@@ -1,0 +1,43 @@
+# -*- ruby -*- ft=ruby
+Vagrant.configure('2') do |config|
+  config.omnibus.chef_version = :latest
+
+  config.vm.define "pgsql84" do |pgsql84|
+    pgsql84.vm.box = 'centos65-minimal'
+    pgsql84.vm.provision :chef_solo do |chef|
+      chef.add_recipe 'postgresql::server'
+      chef.json = {
+        'postgresql' => {
+          'version' => '8.4',
+          'password' => {
+            'postgres' => '1234'
+          },
+        },
+      }
+    end
+  end
+
+  config.vm.define "pgsql93" do |pgsql93|
+    pgsql93.vm.box = 'centos65-minimal'
+    pgsql93.vm.provision :chef_solo do |chef|
+      chef.add_recipe 'postgresql::server'
+      chef.json = {
+        'postgresql' => {
+          'version' => '9.3',
+          'password' => {
+            'postgres' => '1234'
+          },
+          'enable_pgdg_yum' => true,
+          "client" => {
+            "packages" => [ "postgresql93-devel" ]
+          },
+          'server' => {
+            'packages' => [ 'postgresql93-server', 'postgresql93-contrib'],
+            'service' => 'postgresql-9.3',
+            'service_name' => 'postgresql-9.3'
+          },
+        },
+      }
+    end
+  end  
+end
