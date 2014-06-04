@@ -1,5 +1,13 @@
 # -*- ruby -*- ft=ruby
 Vagrant.configure('2') do |config|
+
+  $yum_script =  <<SCRIPT
+echo Provisioning emacs...
+sudo yum -y install emacs
+echo Provisioning pgbench...
+sudo yum -y install postgresql-contrib
+SCRIPT
+
   config.omnibus.chef_version = :latest
 
   config.vm.define "pgsql84" do |pgsql84|
@@ -16,6 +24,7 @@ Vagrant.configure('2') do |config|
         },
       }
     end
+    pgsql84.vm.provision "shell", inline: $yum_script
   end
 
   config.vm.define "pgsql93" do |pgsql93|
@@ -41,5 +50,6 @@ Vagrant.configure('2') do |config|
         },
       }
     end
+    pgsql93.vm.provision "shell", inline: $yum_script
   end  
 end
