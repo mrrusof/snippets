@@ -4,6 +4,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.define "pgsql84" do |pgsql84|
     pgsql84.vm.box = 'centos65-minimal'
+    pgsql84.vm.box = 'https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box'
     pgsql84.vm.provision :chef_solo do |chef|
       chef.add_recipe 'postgresql::server'
       chef.json = {
@@ -19,6 +20,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.define "pgsql93" do |pgsql93|
     pgsql93.vm.box = 'centos65-minimal'
+    pgsql93.vm.box = 'https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box'
     pgsql93.vm.provision :chef_solo do |chef|
       chef.add_recipe 'postgresql::server'
       chef.json = {
