@@ -6,7 +6,7 @@ echo Provisioning emacs...
 sudo yum -y install emacs
 
 curl --remote-name -L http://yum.postgresql.org/8.4/redhat/rhel-6-x86_64/pgdg-centos-8.4-3.noarch.rpm
-sudo rpm -i pgdg-centos-8.4-3.noarch.rpm
+sudo yum -y install pgdg-centos-8.4-3.noarch.rpm
 
 sudo yum -y install postgresql-libs-8.4.20-1.el6_5.x86_64 \
   postgresql84-8.4.21-1PGDG.rhel6.x86_64 \
