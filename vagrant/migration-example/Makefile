@@ -5,3 +5,5 @@ up:
 
 destroy:
 	vagrant destroy -f
+
+clean: destroy
