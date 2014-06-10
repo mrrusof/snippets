@@ -20,25 +20,25 @@ sudo yum -y install postgresql-libs-8.4.20-1.el6_5.x86_64 \
   postgresql84-contrib-8.4.21-1PGDG.rhel6.x86_64 \
   postgresql84-server-8.4.21-1PGDG.rhel6.x86_64
 
-# sudo su
-# echo '**** Compiling locale es_MX.iso88591'
-# localedef -i es_MX -f ISO-8859-1 es_MX.iso88591
-# PGDATA=/usr/local/pgsql/data
-# echo '**** Creating cluster'
-# mkdir -p $PGDATA
-# chown postgres $PGDATA
-# cd $PGDATA
-# sudo -u postgres /usr/pgsql-8.4/bin/initdb -D $PGDATA --encoding=LATIN1 --locale=es_MX.iso88591 --pgdata=$PGDATA --auth=ident
-# echo '**** Applying postgres.conf'
-# rm -f $PGDATA/postgresql.conf
-# cp /vagrant/postgresql.conf $PGDATA
-# chown postgres $PGDATA/potsgresql.conf
-# echo '**** Starting PostgreSQL'
-# sudo -u postgres /usr/pgsql-8.4/bin/postgres -h '' -k $PGDATA -D $PGDATA 1>$PGDATA/pgsql.log < /dev/null 2>&1 &
-# echo "**** PID is $!"
-# echo $! > $PGDATA/postgres.pid
-# echo '**** Creating blocketdb
-# while ! psql -h $PGDATA -c 'select current timestamp'; do echo -n .; sleep 0.2; done
+sudo su
+echo '**** Compiling locale es_MX.iso88591'
+localedef -i es_MX -f ISO-8859-1 es_MX.iso88591
+PGDATA=/usr/local/pgsql/data
+echo '**** Creating cluster'
+mkdir -p $PGDATA
+chown postgres $PGDATA
+cd $PGDATA
+sudo -u postgres /usr/pgsql-8.4/bin/initdb -D $PGDATA --encoding=LATIN1 --locale=es_MX.iso88591 --pgdata=$PGDATA --auth=ident
+echo '**** Applying postgres.conf'
+rm -f $PGDATA/postgresql.conf
+cp /vagrant/postgresql.conf $PGDATA
+chown postgres $PGDATA/potsgresql.conf
+echo '**** Starting PostgreSQL'
+sudo -u postgres /usr/pgsql-8.4/bin/postgres -h '' -k $PGDATA -D $PGDATA 1>$PGDATA/pgsql.log < /dev/null 2>&1 &
+echo "**** PID is $!"
+echo $! > $PGDATA/postgres.pid
+echo '**** Creating database
+while ! sudo -u postgres psql -h $PGDATA -c 'select current timestamp'; do echo -n .; sleep 0.2; done
 
 exit
 
