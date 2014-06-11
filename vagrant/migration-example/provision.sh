@@ -91,3 +91,8 @@ set +x
 sudo -u postgres psql -h $PGDATA -c 'CREATE TABLE tinytable (name varchar(50), age int)' tinydb
 sudo -u postgres psql -h $PGDATA -c "INSERT INTO tinytable VALUES ('Ruslan', 28)" tinydb
 sudo -u postgres psql -h $PGDATA -c 'SELECT * FROM tinytable' tinydb
+
+echo '**** Creating plpgsql language'
+if [ "$VER" = "8.4" ]; then
+    sudo -u postgres psql -h $PGDATA tinydb -c "CREATE LANGUAGE plpgsql;" >/dev/null 2>&1
+fi
