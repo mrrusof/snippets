@@ -1,4 +1,4 @@
-all: destroy up
+all: up
 
 up:
 	vagrant up
