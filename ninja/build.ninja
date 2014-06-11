@@ -1,0 +1,21 @@
+# See ninja manual at http://martine.github.io/ninja/manual.html
+
+# Variable declaration
+eflags = -n
+
+# Rule echo_rule, a short name for a command.
+# echo_rule corresponds to following C function declaration.
+#
+# void echo_rule() {
+#    printf("hola mundo!");
+# }
+#
+rule echo_rule
+     command = echo $eflags hola mundo\!
+
+# Build statement say_hola, the application of a rule.
+# say_hello corresponds to following C function call.
+#
+# echo_rule(); // please say_hola
+#
+build say_hola: echo_rule
