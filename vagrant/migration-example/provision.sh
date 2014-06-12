@@ -5,6 +5,15 @@ echo $1 >/tmp/pgsql-ver
 sudo su
 set -e
 
+ws=0
+declare -a ws_sy=( '\' '|' '/' '-' )
+function wait_step {
+    echo -ne '\b'; \
+    sleep 0.2; \
+    echo -n ${ws_sy[ws]}; \
+    (( ws = (ws+1) % 4 )) || true
+}
+
 set -x
 VER=`cat /tmp/pgsql-ver`
 PGDATA=/usr/local/pgsql/data
@@ -14,7 +23,7 @@ set +x
 echo '**** Enabling yum caching'
 sed -i s/keepcache=0/keepcache=1/ /etc/yum.conf
 
-echo '**** Restoring saved yum cache'
+echo '**** Restoring yum cache'
 if [ -d /vagrant/yum-cache-$VER ]; then
     cp -rv /vagrant/yum-cache-$VER/* /var/cache/yum
 fi
@@ -68,31 +77,51 @@ localedef -i es_MX -f ISO-8859-1 es_MX.iso88591
 
 echo '**** Creating cluster'
 mkdir -p $PGDATA
-chown postgres $PGDATA
+chown postgres:postgres $PGDATA
 cd $PGDATA
 sudo -u postgres /usr/pgsql-$VER/bin/initdb -D $PGDATA --encoding=LATIN1 --locale=es_MX.iso88591 --pgdata=$PGDATA --auth=ident
 
 echo '**** Applying postgres.conf'
 rm -f $PGDATA/postgresql.conf
 cp /vagrant/postgresql.conf $PGDATA
-chown postgres $PGDATA/postgresql.conf
+chown postgres:postgres $PGDATA/postgresql.conf
+if [ -d /vagrant/pgdata-$VER ]; then
+    echo '**** Recreating database'
+    rm -rf $PGDATA/*
+    cp -r /vagrant/pgdata-$VER/* $PGDATA
+    chown -R postgres:postgres $PGDATA
+    chmod 0700 $PGDATA
 
-echo '**** Starting PostgreSQL'
-sudo -u postgres /usr/pgsql-$VER/bin/postgres -h '' -k $PGDATA -D $PGDATA 1>$PGDATA/pgsql.log < /dev/null 2>&1 &
-echo "**** PID is $!"
-echo $! > $PGDATA/postgres.pid
-ps -A u | grep postgres
-while ! sudo -u postgres psql -h $PGDATA -c 'SELECT current_timestamp' template1 >/dev/null 2>&1; do echo -n .; sleep 0.2;  done
+    echo '**** Starting PostgreSQL'
+    sudo -u postgres /usr/pgsql-$VER/bin/postgres -h '' -k $PGDATA -D $PGDATA 1>/tmp/pgsql.log < /dev/null 2>&1 &
+    echo "**** PID is $!"
+    echo $! > /tmp/postgres.pid
+    ps -A u | grep postgres
+    while ! sudo -u postgres psql -h $PGDATA -c 'SELECT current_timestamp' template1 >/dev/null 2>&1; do wait_step;  done
+else
+    echo '**** Starting PostgreSQL'
+    sudo -u postgres /usr/pgsql-$VER/bin/postgres -h '' -k $PGDATA -D $PGDATA 1>/tmp/pgsql.log < /dev/null 2>&1 &
+    echo "**** PID is $!"
+    echo $! > /tmp/postgres.pid
+    ps -A u | grep postgres
+    while ! sudo -u postgres psql -h $PGDATA -c 'SELECT current_timestamp' template1 >/dev/null 2>&1; do wait_step;  done
+    
+    echo '**** Creating database'
+    set -x
+    sudo -u postgres /usr/pgsql-$VER/bin/createdb --encoding=LATIN1 -h $PGDATA tinydb
+    set +x
+    sudo -u postgres psql -h $PGDATA -c 'CREATE TABLE tinytable (name varchar(50), age int)' tinydb
+    sudo -u postgres psql -h $PGDATA -c "INSERT INTO tinytable VALUES ('Ruslan', 28)" tinydb
+    sudo -u postgres psql -h $PGDATA -c 'SELECT * FROM tinytable' tinydb
 
-echo '**** Creating database'
-set -x
-sudo -u postgres /usr/pgsql-$VER/bin/createdb --encoding=LATIN1 -h $PGDATA tinydb
-set +x
-sudo -u postgres psql -h $PGDATA -c 'CREATE TABLE tinytable (name varchar(50), age int)' tinydb
-sudo -u postgres psql -h $PGDATA -c "INSERT INTO tinytable VALUES ('Ruslan', 28)" tinydb
-sudo -u postgres psql -h $PGDATA -c 'SELECT * FROM tinytable' tinydb
+    echo '**** Creating plpgsql language'
+    if [ "$VER" = "8.4" ]; then
+        sudo -u postgres psql -h $PGDATA tinydb -c "CREATE LANGUAGE plpgsql;" >/dev/null 2>&1
+    fi
 
-echo '**** Creating plpgsql language'
-if [ "$VER" = "8.4" ]; then
-    sudo -u postgres psql -h $PGDATA tinydb -c "CREATE LANGUAGE plpgsql;" >/dev/null 2>&1
+    echo '**** Stopping PostgreSQL'
+    kill `cat /tmp/postgres.pid`
+
+    echo '**** Caching database'
+    cp -r $PGDATA /vagrant/pgdata-$VER
 fi
