@@ -1,0 +1,2 @@
+[alias]
+        clog = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d %Cgreen(%cr)%Creset %s %Cblue<%an>'
