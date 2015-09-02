@@ -21,3 +21,12 @@ end
 ['a','b','c'].each_with_index do |item, index|
   puts "At position #{index}: #{item}"
 end
+[1,2,3].each { |i| puts i }
+
+[1,2,3].each do |i|
+  if i % 2 == 0
+    puts "#{i} is even."
+  else
+    puts "#{i} is odd."
+  end
+end
