@@ -1,0 +1,14 @@
+apply plugin: 'java'
+sourceCompatibility = 1.8
+version = '0.0.1'
+
+compileJava {
+  options.compilerArgs << '-Xlint:deprecation'
+}
+
+jar {
+  manifest {
+    attributes 'Main-class': 'com.example.Deprecated',
+               'Implementation-Version': version
+  }
+}
