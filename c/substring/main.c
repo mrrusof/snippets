@@ -16,25 +16,10 @@ bool issub(char *sub, char * text) {
 }
 
 int main() {
-  char *sub1 = "first";
-  char *sub2 = "";
-  char *sub3 = "fast";
-  char *sub4 = "motor";
-  char *sub5 = "tor.";
-  char *sub6 = " ";
-  char *text1 = "the first motor";
-  char *text2 = "";
-  printf("issub(\"%s\", \"%s\") = %s\n", sub1, text1, btos(issub(sub1, text1)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub1, text2, btos(issub(sub1, text2)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub2, text1, btos(issub(sub2, text1)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub2, text2, btos(issub(sub2, text2)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub3, text1, btos(issub(sub3, text1)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub3, text2, btos(issub(sub3, text2)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub4, text1, btos(issub(sub4, text1)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub4, text2, btos(issub(sub4, text2)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub5, text1, btos(issub(sub5, text1)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub5, text2, btos(issub(sub5, text2)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub6, text1, btos(issub(sub6, text1)));
-  printf("issub(\"%s\", \"%s\") = %s\n", sub6, text2, btos(issub(sub6, text2)));
+  char *sub[] = { "", " ", "the", "first", "motor", "fast", "tor." };
+  char *text[] = { "the first motor", "" };
+  for(int i = 0; i<6; i++)
+    for(int j = 0; j<2; j++)
+      printf("issub(\"%s\", \"%s\") = %s\n", sub[i], text[j], btos(issub(sub[i], text[j])));
   return 0;
 }
