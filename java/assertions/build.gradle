@@ -1,0 +1,10 @@
+apply plugin: 'java'
+sourceCompatibility = 1.8
+version = '0.0.1'
+
+jar {
+  manifest {
+    attributes 'Main-class': 'com.example.Assertions',
+               'Implementation-Version': version
+  }
+}
