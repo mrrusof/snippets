@@ -39,7 +39,7 @@ int main(void) {
      1 23456781234 5678123456781234567812345678123456781234567812345678
      1        2        3       4       5       6       7       8
   */
-  double d = 0.25;
+  double d = 5432.0;
   char * bits = bits_of_double(d);
   printf("For d = %f, bits are\n", d);
   print_bits_of_double(bits);
