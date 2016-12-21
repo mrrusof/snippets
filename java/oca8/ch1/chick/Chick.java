@@ -1,4 +1,5 @@
 public class Chick {
+    // { System.out.println(name); } // does not compile, illegal forward reference
     private String name = "Fluffy";
     { System.out.println("setting field"); }
     public Chick() {
