@@ -84,6 +84,17 @@ public class Arrays {
             out.println(againStrings[0]);
         }
         {
+            out.println("Cast array (4)");
+            Integer[] a = {1,2,3};
+            Object[] b = a;
+        }
+        {
+            out.println("Cast array (5)");
+            Integer[] a = {1,2,3};
+            Object[] b = a;
+            Integer[] c = (Integer[])b;
+        }
+        {
             out.println("Using arrays (1)");
             String cars[] = new String[6];
             out.println(cars.length);
@@ -145,6 +156,12 @@ public class Arrays {
             int m2 [   ] [];
             int [] m3 []; // 2d matrix
             int[] m4 [], m5 [][]; // 2d matrix and 3d matrix
+            int [] m6[] = {{1}}, m7 = {1,2}; // 2d matrix and array            
+            out.print("[");
+            for(int r []: m6)
+                out.print(java.util.Arrays.toString(r));
+            out.println("]");
+            out.println(java.util.Arrays.toString(m7));
         }
         {
             out.println("matrices (2)");
@@ -308,6 +325,15 @@ public class Arrays {
             // l.set(1, "robin"); // index out of bounds
         }
         {
+            out.println("ArrayList.set (3)");
+            List<String> l = new ArrayList<>();
+            l.add("hello");
+            l.add("world");
+            l.add("wadup");
+            out.println("l.set(2, \"!\") = " + l.set(2, "!"));
+            out.println("l = " + l);
+        }
+        {
             out.println("ArrayList.clear (1)");
             List<String> l = new ArrayList<>();
             l.add("hello");
@@ -400,6 +426,19 @@ public class Arrays {
             String[] sArray = l.toArray(new String[0]); // to array of same type
         }
         {
+            out.println("Convert between array and list (1b)");
+            List<Integer> l = new ArrayList<>();
+            l.add(1);
+            l.add(2);
+            l.add(3);
+            Object[] a = l.toArray();
+            out.println("a = " + java.util.Arrays.toString(a));
+            Integer[] buffer = new Integer[3];
+            Integer[] sa = l.toArray(buffer);
+            out.println("buffer = " + java.util.Arrays.toString(buffer));
+            out.println("sa = " + java.util.Arrays.toString(sa));
+        }
+        {
             out.println("Convert between array and list (2)");
             out.println("Convert ArrayList into array of same underlying type");
             List<Integer> l = new ArrayList<>();
@@ -467,13 +506,20 @@ public class Arrays {
             //l.remove(0); // UnsupportedOperationException
         }
         {
-            out.println("Sort ArrayList");
+            out.println("Sort (Array)List (1)");
             List<Integer> n = new ArrayList<>();
             n.add(99);
             n.add(5);
             n.add(81);
             java.util.Collections.sort(n);
             out.println(n);
+        }
+        {
+            out.println("Sort (Array)List (2)");
+            List<Integer> n = java.util.Arrays.asList(3,4,1,5,9);
+            out.println("n = " + n);
+            java.util.Collections.sort(n);
+            out.println("sorted n = " + n);
         }
     }
 }

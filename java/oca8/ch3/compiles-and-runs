@@ -156,3 +156,22 @@ yes
 Period p = Period.ofMonths(1).ofYears(1);
 ---
 yes
+***
+int [] a[] = {{1}}, b = {1};
+---
+yes
+***
+String s;
+System.out.println(s);
+---
+Does not compile because s is not initialized.
+***
+DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm");
+LocalDateTime dt = LocalDateTime.parse("2016/12/31 04:59", f);
+---
+AM/PM data is missing given that hour is considered an AM/PM hour by pattern "hh".
+***
+DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+LocalDateTime dt = LocalDateTime.parse("2016/12/31 04:59", f);
+---
+yes

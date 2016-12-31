@@ -4,6 +4,10 @@ public class Str {
 
     public static void main(String... args) {
         {
+            String s;
+            //out.println(s); // does not compile
+        }
+        {
             String s1 = "1";
             String s2 = s1.concat("2");
             s2.concat("3");
@@ -242,9 +246,10 @@ public class Str {
                 // StringBuilder delete(int start, int end)
                 // StringBuilder deleteCharAt(int index)
                 out.println("a = " + a);
-                out.println("a.deleteCharAt(0) = " + a.deleteCharAt(0));
-                out.println("a.delete(3, 4) = " + a.delete(3, 4));
-                out.println("a.delete(3, 4) = " + a.deleteCharAt(7));
+                out.println("a.deleteCharAt(0) = " + a.deleteCharAt(0)); // ani-mals-
+                out.println("a.delete(3, 4) = " + a.delete(3, 4)); // animals-
+                out.println("a.delete(3, 4) = " + a.deleteCharAt(7)); // animals
+                out.println("a.delete(3, 3) = " + a.delete(3, 3)); // animals
             }
 
             out.println("textbook example on StringBuilder's delete() and deleteCharAt()");

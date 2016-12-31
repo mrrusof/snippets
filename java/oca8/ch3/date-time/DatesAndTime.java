@@ -1,5 +1,6 @@
 import static java.lang.System.out;
 import java.time.*;
+import java.time.format.*;
 
 public class DatesAndTime {
     public static void main(String[] a) {
@@ -174,12 +175,48 @@ public class DatesAndTime {
             // System.out.println(f.format(d)); // runtime exception
         }
         {
+            out.println("java.time.format.DateTimeFormatter (4)");
+            java.time.format.DateTimeFormatter f = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+            LocalDate d = LocalDate.now();
+            System.out.println("d = " + d.format(f));
+            System.out.println("d = " + f.format(d));
+        }
+        {
+            out.println("java.time.format.DateTimeFormatter (5)");
+            java.time.format.DateTimeFormatter f = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+            LocalTime t = LocalTime.now();
+            out.println("t = " + t.format(f));
+            out.println("t = " + f.format(t));
+        }
+        {
+            out.println("java.time.format.DateTimeFormatter (6)");
+            DateTimeFormatter f = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+            LocalDateTime dt = LocalDateTime.now();
+            out.println("dt = " + dt.format(f));
+            out.println("dt = " + f.format(dt));
+        }
+        {
+            out.println("java.time.format.DateTimeFormatter (7)");
+            DateTimeFormatter f = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+            LocalDateTime dt = LocalDateTime.now();
+            out.println("dt = " + dt.format(f));
+        }
+        {
             out.println("Parse date/time (1)");
             java.time.format.DateTimeFormatter f = java.time.format.DateTimeFormatter.ofPattern("MM dd yyyy");
             LocalDate date = LocalDate.parse("12 30 2016", f);
             out.println(date);
             LocalTime time = LocalTime.parse("11:22");
             out.println(time);
+        }
+        {
+            out.println("Parse date/time (2)");
+            DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDate d = LocalDate.parse("2016/12/31", f);
+            out.println(d.format(f));
+            f = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+            LocalDateTime dt = LocalDateTime.parse("2016/12/31 04:59", f);
+            out.println(dt.format(f));
         }
     }
 
