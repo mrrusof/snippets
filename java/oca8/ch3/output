@@ -1,0 +1,495 @@
+StringBuilder a = new StringBuilder("hello");
+StringBuilder b = new StringBuilder("hello");
+System.out.println(a == b);
+System.out.println(a.equals(b));
+---
+false (not the same object)
+false (not the same object)
+
+***
+String a = new String("hello");
+String b = new String("hello");
+System.out.println(a == b);
+System.out.println(a.equals(b));
+---
+false (not the same object)
+true (same sequence of characters)
+
+***
+String a = "hello";
+String b = new String(a);
+System.out.println(a == b);
+System.out.println(a.equals(b));
+---
+false (not the same object)
+true (same sequence of characters)
+
+***
+String a = "hello";
+String b = new String("hello");
+System.out.println(a == b);
+---
+false (not the same object)
+
+***
+String a = "hello";
+String b = "hello";
+System.out.println(a == b);
+System.out.println(a.equals(b));
+---
+true (same object)
+true (same object)
+
+***
+String a = "hello";
+String b = " hello".trim();
+System.out.println(a == b);
+System.out.println(a.equals(b));
+---
+false (not the same object)
+true (same sequence of characters)
+
+***
+StringBuilder a = new StringBuilder("hello");
+StringBuilder b = a.append(" world");
+System.out.println(a == b);
+System.out.println(a.equals(b));
+---
+true (same object)
+true (same object)
+
+***
+StringBuilder a = new StringBuilder("abc");
+StringBuilder b = new StringBuilder("abc");
+System.out.println(a == b);
+System.out.println(a.equals(b));
+System.out.println(a.toString() == b.toString());
+System.out.println(a.toString().equals(b.toString()));
+---
+false (not the same object)
+false (not the same object)
+false (not the same object
+true (same sequence of characters)
+
+***
+int[] nn = new int[3];
+nn[1] = 1;
+nn[2] = 2;
+nn[3] = 3;
+for(int n : nn)
+  System.out.print(n + " ");
+---
+ArrayIndexOutOfBoundsException: 3
+
+***
+int[] nn = new int[3];
+nn[0] = 1;
+nn[1] = 2;
+for(int n : nn)
+  System.out.print(n + " ");
+---
+1 2 0
+
+***
+int[] nn = new int[] { 1, 2, 3 };
+for(int n : nn)
+  System.out.print(n + " ");
+---
+1 2 3
+
+***
+int   [] nn = new int[] { 1, 2, 3 };
+for(int n : nn)
+  System.out.print(n + " ");
+---
+1 2 3
+
+***
+int   [   ] nn = new int[] { 1, 2, 3 };
+for(int n : nn)
+  System.out.print(n + " ");
+---
+1 2 3
+
+***
+int nn[] = new int[] { 1, 2, 3 };
+for(int n : nn)
+  System.out.println(n + " ");
+---
+1 2 3
+
+***
+int nn    [] = new int[] { 1, 2, 3 };
+for(int n : nn)
+  System.out.println(n + " ");
+---
+1 2 3
+
+***
+int nn    [   ] = new int[] { 1, 2, 3 };
+for(int n : nn)
+  System.out.println(n + " ");
+---
+1 2 3
+
+***
+int ids [   ] = { 3, 2, 1 }, id = 1;
+System.out.println(ids[id]);
+---
+2
+
+***
+String [    ] cars = new String { "sedan", "coupe", "truck" } [];
+for(String car : cars)
+  System.out.println(car + " ");
+---
+Compilation error on the first line. A pair of brackets is expected before the anonymous array.
+
+***
+String [] strings = { "string" };
+Object[] objects = strings;
+out.println(strings == objects);
+---
+true
+
+***
+Object[] objects = { "hello", 1, 2f, true };
+for(Object object : objects)
+  System.out.print(object + " ");
+---
+hello 1 2.0 true
+
+***
+String[] strings = { "hello" };
+Objects[] objects = strings;
+objects[0] = new StringBuilder("world");
+System.out.println(objects[0]);
+---
+Runtime exception `java.lang.ArrayStoreException: java.lang.StringBuilder` on line 3.
+
+***
+String[] strings = { "hello" };
+Object[] objects = strings;
+String[] againStrings = (String[]) objects;
+System.out.println(againStrings[0]);
+---
+hello
+
+***
+String cars[] = new String[6];
+System.out.println(cars.length);
+---
+6
+
+***
+String cars[] = new String[6];
+for(String car : cars)
+  System.out.print(car + ",");
+---
+null,null,null,null,null,null
+
+***
+String [ ] cars = new String[6];
+System.out.println(cars[0]);
+---
+null
+
+***
+String [ ] cars = new String[6];
+System.out.println(cars[6]);
+---
+Runtime exception `java.lang.ArrayindexOutOfBoundsException: 6` on line 2.
+
+***
+String [ ] cars = new String[6];
+System.out.println(cars.length);
+---
+Runtime exception `java.lang.ArrayindexOutOfBoundsException: 6` on line 2.
+
+***
+String [ ] cars = new String[6];
+System.out.println(cars.length() - 1);
+---
+Compile error. Cannot find method `length()` on line 2.
+
+***
+String [ ] numbers = { 2, 3, 5 };
+System.out.println(java.util.Arrays.binarySearch(numbers, 4));
+---
+-3
+
+***
+int nums[   ] = { 3,2,1} ;
+System.out.println(Arrays.binarySearch(nums, 2);
+---
+Vanilla answer: the result is unpredictable.
+Precise answer: 1.
+
+***
+int [] m [] [  ] = new int [1] [2]   [ 3];                          
+int [] [][] m2 = {{{1,2,3},{4,5,6}}};                               
+m = m2;
+for(int [] i [  ]: m)                                               
+    for(int j [] : i) {
+        for(int n : j)
+            System.out.print(n + " ");
+        System.out.println();
+    }  
+---
+1 2 3
+4 5 6
+
+***
+int [ ] m[] = {{9,3,4}, {}};
+for(int i = 0; i < m.length; i++)
+  System.out.print(m.length + " ");
+---
+3 0
+
+***
+int m[][] = new int[2][];
+m[0] = new int[1];
+m[1] = new int[2];
+System.out.println(m[0][0]);
+---
+0
+
+***
+Object m[][] = new Object[2][];
+m[0] = new String[1];
+out.println(m[0][0]);
+---
+null
+
+***
+int[] [  ] m2 = new int[3][2];
+THE_LOOP: for(int i = 0; i < m2.length; i++) {
+  for(int j = 0; j < m2[i].length; j++)
+    if(i == 1)
+      break THE_LOOP;
+    else
+      System.out.print(m2[i][j] + " ");;
+  System.out.println();
+};
+---
+0 0
+
+***
+int [] [] m2 = new int [2][1];
+A: for(int [] m3 : m2) {
+  for(int i : m3)
+    if(i == 0)
+      break A;
+    else
+      System.out.print(i + " ");
+  System.out.println();
+};;
+---
+(nothing)
+
+***
+List<Integer> l = new ArrayList<>();
+l.add(1);
+System.out.println(l.toString);
+---
+[1]
+
+***
+List<String> l = new ArrayList<>();
+String[] ss = {"hello", "world"};
+for(String s : ss)
+  l.add(s);
+System.out.println(l.toString());
+---
+[hello, world]
+
+***
+List<Integer> l = new ArrayList<>();
+for(int i = 1; i <= 10; i++)
+  l.add(0, i);
+System.out.println(l);
+---
+[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+
+***
+List<String> a = new ArrayList<>();
+a.add("hello");
+a.add(1, "world");
+a.add(0, "well");
+System.out.println(a);
+---
+[well, hello, world]
+
+***
+List<StringBuilder> l = new ArrayList<>();
+l.add(new StringBuilder("hello"));
+System.out.println(l);
+---
+[hello]
+
+***
+List<StringBuilder> l = new ArrayList<>();
+l.add(new StringBuilder("hello"));
+System.out.println(l.contains("hello"));
+---
+false
+
+***
+List<StringBuilder> l = new ArrayList<>();
+l.add(new StringBuilder("hello"));
+StringBuilder sb = new StringBuilder("hello");
+System.out.println(l.contains(sb));
+---
+false
+
+***
+List<String> l1 = new ArrayList<>();
+List<String> l2 = new ArrayList<>();
+l1.add("hello");
+l2.add(new String("hello"));
+System.out.println(l1.equals(l2));
+---
+true
+
+***
+List<Integer> l = new ArrayList<>();
+l.add(1);
+l.add(2);
+l.remove(1);
+System.out.println(l);
+---
+[1]
+
+***
+List<Integer> l = new ArrayList<>();
+l.add(1);
+l.add(2);
+l.remove((Integer) 1);
+System.out.println(l);
+---
+[2]
+
+***
+List<Integer> l = new ArrayList<>();
+l.add(1);
+l.add(2);
+l.remove(new Integer(1));
+System.out.println(l);
+---
+[2]
+
+***
+List<String> l = new ArrayList<>();
+l.add("hello");
+Object[] oA = l.toArray();
+String[] sA = l.toArray(new String[0]);
+oA[0] = null;
+System.out.println(Arrays.toString(sA));
+---
+[hello]
+
+***
+LocalDate d = LocalDate.of(2016, 12, 30);
+System.out.println(d);
+---
+2016-12-30
+
+***
+LocalDate d = LocalDate.of(2026, Month.DECEMBER, 30);
+d.plusDays(10);
+System.out.println(d);
+---
+2026-12-30
+
+***
+LocalDate d1 = LocalDate.of(2016,12,30);
+LocalDate d2 = LocalDate.of(2016,12,31);
+System.out.println(d1 + d2);
+---
+Compile error: `bad operand types for binary operator '+'`.
+
+***
+Period p = Period.ofMonths(1).ofYears(1);
+System.out.println(p);
+---
+P1Y
+
+***
+Period p = Period.of(1, 1, 0);
+System.out.println(p);
+---
+P1Y1M
+
+***
+LocalDate d = LocalDate.of(2016,12,30);
+Period p = Period.ofDays(1);
+System.out.println(d.plus(p));
+---
+2016-12-31
+
+***
+LocalDateTime dt = LocalDateTime.of(2016,Month.DECEMBER,30);
+System.out.println(dt);
+---
+Compile error: constructor of LocalDateTime expects hour and minute too.
+
+***
+LocalDateTime dt = LocalDateTime.of(2016,Month.DECEMBER,30,0,0);
+System.out.println(dt);
+---
+2016-12-30T00:00
+
+***
+LocalDateTime dt = LocalDateTime.of(2016,Month.DECEMBER,30,0,0);
+Period p = Period.ofDays(1);
+System.out.println(dt.plus(p));
+---
+2016-12-31T00:00
+
+***
+LocalTime t = LocalTime.of(0,0);
+Period p = Period.ofDays(1);
+System.out.println(t.plus(d));
+---
+Compile error: no method plus of LocalTime takes an object of type Period.
+
+***
+DateTimeFormatter f = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+LocalDate d = LocalDate.of(2016,12,30);
+System.out.println(d.format(f));
+---
+12/30/16
+
+***
+DateTimeFormatter f = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+LocalDate d = LocalDate.of(2016,12,30);
+System.out.println(f.format(d));
+---
+12/30/16
+
+***
+DateTimeFormatter f = DateTimeFormatter.ofPattern("hh:mm");
+LocalTime t = LocalTime.of(7,40);
+System.out.println(f.format(t));
+---
+07:40
+
+***
+DateTimeFormatter f = DateTimeFormatter.ofPattern("hh:mm");
+LocalTime t = LocalTime.of(7,40);
+System.out.println(t.format(f));
+---
+07:40
+
+***
+DateTimeFormatter f = DateTimeFormatter.ofPattern("hh:mm");
+LocalDate d = LocalDate.of(2016,Month.DECEMBER,30);
+System.out.println(d.format(f));
+---
+Runtime exception.
+
+***
+LocalTime time = LocalTime.parse("07:40");
+System.out.println(time);
+---
+07:40

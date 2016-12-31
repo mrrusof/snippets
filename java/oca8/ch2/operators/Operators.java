@@ -104,6 +104,9 @@ public class Operators {
         short xx = 1;
         yy = 3;
         short uu = (short) (xx * yy);
+        // Java automatically promotes char to int
+        char thechar = 'a';
+        System.out.println("thechar + 'b' = " + (thechar + 'b'));
 
         // compound assignment
         // int vv *= 1; // does not compile.
@@ -137,6 +140,9 @@ public class Operators {
 
         // relational operators
         // System.out.println("(true > false) = " + (true > false)); // does not compile
+        // System.out.println("(true - false) = " + (true - false)); // does not compile
+        // System.out.println("(true % false) = " + (true % false)); // does not compile
+        // System.out.println("(true =< false) = " + (true =< false)); // does not compile
         System.out.println("\"hola\" instanceof String = " + ("hola" instanceof String));
         System.out.println("\"hola\" instanceof Object = " + ("hola" instanceof Object));
         //        System.out.println("\"hola\" instanceof List = " + ("hola" instanceof ArrayList)); // does not compile
@@ -164,24 +170,24 @@ public class Operators {
         {
             String a = new String("hola");
             String b = new String("hola");
-            System.out.println("a == b = " + (a == b));
+            System.out.println("(constructor \"hola\") a == b = " + (a == b));
         }
         {
             String a = "hola";
             String b = "hola";
-            System.out.println("a == b = " + (a == b));
+            System.out.println("(literal \"hola\") a == b = " + (a == b));
         }
         {
             Boolean aa = new Boolean(true);
             Boolean bb = new Boolean(true);
-            System.out.println("(constructor) aa == bb = " + (aa == bb));
+            System.out.println("(constructor true) aa == bb = " + (aa == bb));
             Boolean cc = bb;
-            System.out.println("(constructor) cc == bb = " + (cc == bb));
+            System.out.println("(constructor true) cc == bb = " + (cc == bb));
         }
         {
             Boolean aa = true;
             Boolean bb = true;
-            System.out.println("(boxing) aa == bb = " + (aa == bb));
+            System.out.println("(boxing of literal true) aa == bb = " + (aa == bb));
             aa = false;
             System.out.println("aa = " + aa);
             System.out.println("bb = " + bb);

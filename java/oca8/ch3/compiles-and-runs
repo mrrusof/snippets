@@ -1,0 +1,158 @@
+List<int> l = new ArrayList<>();
+---
+no
+***
+List<Integer> l = new ArrayList<>();
+---
+yes
+***
+List<Integer> l = new ArrayList();
+---
+yes
+***
+List<Integer> l = new ArrayList<Object>();
+---
+no
+***
+List<Object> l = new ArrayList<Integer>();
+---
+no
+***
+ArrayList<Integer l = new List<>();
+---
+no
+***
+ArrayList<String> l = (new ArrayList<>()).add(Boolean.TRUE);;
+---
+no
+***
+ArrayList<String> l = (new ArrayList<>()).add("hello");
+---
+no
+***
+List<Byte> l = new ArrayList<>();
+l.add(1);
+---
+no
+***
+List<Byte> l = new ArrayList<>();
+l.add((Byte) 1);
+---
+no
+***
+List<Byte> l = new ArrayList<>();
+l.add((byte) 1);
+---
+yes
+***
+int i = Integer.parseInt("123");
+---
+yes
+***
+int i = Integer.valueOf("123");
+---
+yes
+***
+Integer i = Integer.parseInt("123");
+---
+yes
+***
+Integer i = Integer.valueOf("123");
+---
+yes
+***
+List<Float> l = new ArrayList<>();
+l.add(1.0);
+---
+no
+***
+List<Float> l = new ArrayList<>();
+l.add(1.0f);
+---
+yes
+***
+List<Float> l = new ArrayList();
+l.add(2f);
+---
+yes
+***
+List<Float> l = new ArrayList();
+l.add(1d);
+***
+Float f = 1;
+---
+no
+***
+Float f = (Integer)1;
+---
+no
+***
+Float f = 1.0;
+---
+no
+***
+Float f = 1f;
+---
+yes
+***
+List<Float> l = new ArrayList<>();
+l.add(1f);
+double d = l.get(0);
+---
+yes
+***
+List<Float> l = new ArrayList<>();
+l.add(null);
+double d = l.get(0);
+---
+no
+***
+List<Float> l = new ArrayList<>();
+l.add(null);
+Float f = l.get(0);
+---
+yes
+***
+List<Float> l = new ArrayList<>();
+l.add(null);
+Double d = (Double)l.get(0);
+---
+no
+***
+List<Integer> l = new ArrayList<>();
+l.add(1);
+Integer[] a = (Integer[])l.toArray();
+---
+Runtime exception `java.lang.ClassCastException` on line 3.
+***
+List<Integer> l = new ArrayList<>();
+l.add(1);
+Integer[] a = l.toArray(new Integer[0]);
+---
+yes
+***
+List<String> sl = new ArrayList<>();
+sl.add("hello");
+String[] sa = sl.toArray(new String[0]);
+---
+yes
+***
+LocalDate d = new LocalDate();
+---
+Constructor of LocalDate is private.
+***
+LocalDate d = LocalDate.of(2016,12,30);
+---
+yes
+***
+LocalDate d = LocalDate.of(12, 30, 2016);
+---
+Runtime exception java.time.DateTimeException. Right order is LocalDate.of(year, month, day)
+***
+LocalDate date = LocalDate.of(2016, Month.DECEMBER, 30);
+---
+yes
+***
+Period p = Period.ofMonths(1).ofYears(1);
+---
+yes

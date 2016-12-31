@@ -1,0 +1,16 @@
+The 13 relevant methods of String: charAt, concat, endsWith, equals, equalsIgnoreCase, indexOf, length, replace, startsWith, substring, toLowerCase, toUpperCase, trim, equals
+The relevant methods of StringBuilder: append, charAt, delete, deleteCharAt, indexOf, insert, lengh, reverse, substring, toString, equals
+The constructors of String
+The constructors of StringBuilder
+The constructors of ArrayList
+The relevant methods 7 of ArrayList: add/2, clear, remove/2, set/1, isEmpty/1, size()/1, contains/1, equals/1
+Assign array to array of supertype and viceversa.
+Convert ArrayList to array of same underlying type.
+Convert array to fixed length List of same underlying type.
+Sort an array and sort an ArrayList.
+Create LocalDate from year, month, and day.
+Create LocalTime from hour+minute((+second)+nanosecond).
+Create LocalDateTime from year+month+day+hour+minute((+second)+nanosecond) or LocalDate+LocalTime
+Date and time classes are immutable.
+Create Period of days/months/years/weeks or years+monts+days
+Format LocalDate/Time/DateTime w/ SHORT and MEDIUM formats

@@ -1,0 +1,18 @@
+What is the value of `names`?
+```
+class Names {
+  String names[];
+}
+```
+---
+null
+
+***
+What is the value of `names`?
+```
+class Names {
+  String names[] = new String[2];
+}
+```
+---
+An array of length 2.
