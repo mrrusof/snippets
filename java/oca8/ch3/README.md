@@ -189,7 +189,7 @@ LocalDate d = LocalDate.of(2016,12,31);
 d.plus(p); // d remains unchanged
 ```
 
-## Create Periof of days/months/years/weeks or years+months+days
+## Create Period of days/months/years/weeks or years+months+days
 
 ```java
 Period p1 = Period.ofDays(1);

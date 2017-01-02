@@ -175,3 +175,47 @@ DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 LocalDateTime dt = LocalDateTime.parse("2016/12/31 04:59", f);
 ---
 yes
+***
+String s1 = "hello";
+StringBuilder s2 = new StringBuilder("hello");
+System.out.println(s1 == s2);
+---
+Compile error: String and StringBuilder are incomparable.
+***
+StringBuilder s = "mambo";
+s.append(4).deleteCharAt(3).delete(3, s.length());
+System.out.println(s);
+---
+Compile error: `incompatible types: String cannot be converted to StringBuilder`.
+***
+StringBuilder s = new StringBuilder("mambo");
+s.append(4).deleteCharAt(3).delete(3, s.length());
+System.out.println(s);
+---
+mam
+***
+List<Integer> l = new ArrayList<>();
+System.out.println(l.size());
+---
+yes
+***
+List<Integer> l = new ArrayList<>();
+System.out.println(l.length());
+---
+ArrayList provides method `size()` instead of `length()`.
+***
+List<Integer> l = new ArrayList<>();
+l.add(1);
+l.add(Integer.parseInt("2"));
+for(int n : l) System.out.println(n);
+---
+yes
+***
+List<Integer> l = new ArrayList<>();
+l.add(1);
+l.add(Integer.parseInt("2"));
+l.add(Integer.valueOf(3));
+l.add(null);
+for(int n : l) System.out.println(n);
+---
+Runtime exception when we reach null element.

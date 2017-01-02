@@ -521,5 +521,21 @@ public class Arrays {
             java.util.Collections.sort(n);
             out.println("sorted n = " + n);
         }
+        {
+            out.println("Length, capacity, size (1)");
+            List<Integer> l = new ArrayList<>();
+            // out.println(l.length()); // no ethod length()
+            out.println(l.size());
+        }
+        {
+            out.println("Review ArrayList (1)");
+            List<Integer> l = new ArrayList<>();
+            l.add(Integer.parseInt("1"));
+            l.add(Integer.valueOf("2"));
+            l.add(null);
+            l.add(1);
+            for(int n : l)
+                out.println(n);
+        }
     }
 }

@@ -202,6 +202,33 @@ public class DatesAndTime {
             out.println("dt = " + dt.format(f));
         }
         {
+            out.println("java.time.format.DateTimeFormatter (8)");
+            DateTimeFormatter f = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+            LocalDateTime dt = LocalDateTime.of(2017,1,1,21,58);
+            out.println("dt = " + dt.format(f));
+            out.println("dt = " + f.format(dt));
+        }
+        {
+            out.println("java.time.format.DateTimeFormatter (9)");
+            DateTimeFormatter f = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+            LocalDateTime dt = LocalDateTime.of(2017,1,1,21,58);
+            out.println("dt = " + dt.format(f));
+        }
+        {
+            out.println("java.time.LocalDate (1)");
+            LocalDate d = LocalDate.of(2016,12,31);
+            Period p = Period.ofYears(1).ofDays(1);
+            d = d.plus(p);
+            System.out.println(d);
+        }
+        {
+            out.println("java.time.LocalDate (2)");
+            LocalDate d = LocalDate.of(2016,12,31);
+            Period p = Period.ofDays(1).ofYears(1);
+            d = d.plus(p);
+            System.out.println(d);
+        }
+        {
             out.println("Parse date/time (1)");
             java.time.format.DateTimeFormatter f = java.time.format.DateTimeFormatter.ofPattern("MM dd yyyy");
             LocalDate date = LocalDate.parse("12 30 2016", f);

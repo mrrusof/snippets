@@ -143,15 +143,14 @@ public class Str {
         }
         // StringBuilder example
         {
-            out.println("StrigBuilder example");
+            out.println("StrigBuilder example (1)");
             StringBuilder a = new StringBuilder();
             for(char c = 'a'; c <= 'z'; c++)
                 a.append(c);
             out.println("a = " + a);
         }
-        // Another StringBuilder example
         {
-            out.println("Another StringBuilder example");
+            out.println("StringBuilder example (2)");
             StringBuilder sb = new StringBuilder("start");
             sb.append("+middle"); // sb = "start+middle"
             StringBuilder same = sb.append("+end"); // sb = "start+middle+end"
@@ -163,14 +162,19 @@ public class Str {
             StringBuilder b = a.append(" mundo");
             out.println("a == b = " + (a == b));
         }
-        // Yet another StringBuilder example
         {
-            out.println("Yet another StringBuilder example");
+            out.println("StringBuilder example (3)");
             StringBuilder a = new StringBuilder("abc");
             StringBuilder b = a.append("de");
             b = b.append("f").append("g");
             out.println("a = " + a);
             out.println("b = " + b);
+        }
+        {
+            out.println("StringBuilder vs String (1)");
+            String s1 = "hello";
+            StringBuilder s2 = new StringBuilder("hello");
+            // out.println(s1 == s2); // Incomparable types: String ad StringBuilder
         }
         {
             out.println("StringBuilder append() (1)");
@@ -284,7 +288,6 @@ public class Str {
                 out.println("a.toString() == b.toString() = " + (a.toString() == b.toString())); // false
                 out.println("a.toString().equals(b.toString()) = " + a.toString().equals(b.toString())); // true
             }
-
             out.println("example on StringBuilder + ==");
             {
                 StringBuilder one = new StringBuilder();
@@ -314,6 +317,29 @@ public class Str {
                 String x = "Hello World";
                 String y = " Hello World".trim();
                 out.println(x.equals(y)); // true
+            }
+            {
+                out.println("StringBuilder review (1)");
+                StringBuilder s = new StringBuilder("mambo");
+                // StringBuilder s = "mambo"; // comiple error: incompatible types
+                s.append(4).deleteCharAt(3).delete(3, s.length());
+                out.println(s);
+            }
+            {
+                out.println("StringBuilder review (2)");
+                StringBuilder s = new StringBuilder("mambo");
+                out.println(s);
+                s.reverse();
+                out.println(s);
+                StringBuilder p = new StringBuilder("mambo");
+                p.append("bmam?").delete(0, "mamb".length()).reverse().deleteCharAt(0);
+                out.println(p);
+            }
+            {
+                out.println("StringBuilder review (3)");
+                StringBuilder s = new StringBuilder("mambo");
+                out.println(s.length());
+                out.println(s.capacity());
             }
         }
     }

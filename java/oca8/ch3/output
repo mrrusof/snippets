@@ -531,3 +531,40 @@ LocalDateTime dt = LocalDateTime.parse("2016/12/31", f);
 System.out.println(dt.format(f));
 ---
 Cannot parse date+TIME, because there is neither hour nor minute.
+
+***
+StringBuilder p = new StringBuilder("mambo");
+p.append("bmam?").delete(0, "mamb".length()).reverse().deleteCharAt(0);
+System.out.println(p);
+---
+mambo
+
+***
+DateTimeFormatter f = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+LocalDateTime dt = LocalDateTime.of(2017,1,1,21,58);
+System.out.println(dt.format(f));
+---
+9:58 PM
+
+***
+DateTimeFormatter f = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+LocalDateTime dt = LocalDateTime.of(2017,1,1,21,58);
+System.out.println(dt.format(f));
+---
+1/1/17
+
+***
+LocalDate d = LocalDate.of(2016,12,31);
+Period p = Period.ofYears(1).ofDays(1);
+d = d.plus(d);
+System.out.println(d);
+---
+2017-01-01
+
+***
+LocalDate d = LocalDate.of(2016,12,31);
+Period p = Period.ofYears(1).ofDays(1);
+d = d.plus(d);
+System.out.println(d);
+---
+2017-12-31
