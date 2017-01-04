@@ -84,9 +84,27 @@ Optional specifiers can appear before the access modifier.
 
 The return value must fit into the return type.
 
+When the return type is byte or short and you return an integer literal, Java does not issue a compile error.
+
+```java
+public static byte task() { return 1; }
+```
+
+Same happens when you assign an integer literal to a variable of type short or byte.
+```java
+public static byte task() {
+  byte b = 2;
+  b = 1;
+  return b;
+}
+```
+
 ## Method name
 
 Follows the same rules for identifiers.
+Identifiers may only consist o letters, number,s $ and _.
+The first character is not allowed to be a number.
+
 
 ## Parameter list
 
