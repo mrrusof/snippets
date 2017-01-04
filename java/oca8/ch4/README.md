@@ -2,6 +2,59 @@
 
 ## Syntax of method declaration
 
+```java
+public final void sleep(long ms) throws InterruptedException {
+  // do the sleeping
+}
+```
+
+```
+MD ::=
+  | AM{0,1} OS{0,1} MDaux1
+  | AM{0,1} ASS RT MDaux2;
+
+MDaux1 ::=
+  | void  MDaux2 MB(void)
+  | byte  MDaux2 MB(byte)
+  | short MDaux2 MB(short)
+  | int MDaux2 MB(int)
+  | long MDaux2 MB(long)
+  | String MDaux2 MB(String)
+  | byte[] MDaux2 MB(byte[])
+  | short[] MDaux2 MB(short[])
+  | int[] MDaux2 MB(int[])
+  | long[] MDaux2 MB(long[])
+
+MDaux2 ::= MN(PL{0,1}) OEL{0,1}
+
+MD: method declaration
+AM: access modifier
+OS: optional specifier
+ASS: abstract specifier + specifiers
+RT: return type
+MN: method name
+PL: parameter list
+OEL: optional exception list
+MB: method body
+
+AM ::= private | protected | public
+OS ::= static | final | static final | final static
+ASS ::= abstract | abstract OS | OS abstract | static abstract final | final abstract static
+RT ::= void | T
+MN ::= I
+PL ::= T I | T I, PL
+OEL ::= throws EL
+MB(void) ::= { } | { return; }
+MB(t) ::= { return V(t); }
+EL ::= E | E, EL
+T ::= byte | short | int | long | String | StringBuilder ...
+V(byte) ::= 1
+V(short) ::= 1
+...
+I ::= p | param | a1 | task ...
+E ::= InterruptedException | IndexOutOfBoundsException | IllegalArgumentException | ...
+```
+
 ## Access Modifiers
 
 More restrictive to least restrictive.
