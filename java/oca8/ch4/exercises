@@ -1,0 +1,6 @@
+---
+Stub main class with main method in root of classpath.
+---
+Write class Vehicle with getter and setter for String property `name`.
+Class Vehicle belongs to package `vehicles`.
+---

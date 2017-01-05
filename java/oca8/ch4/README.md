@@ -61,7 +61,7 @@ More restrictive to least restrictive.
 
 1. `private`: Member is only accessible within the same class.
 2. default access: (aka package private access.) Member is only accessible within the same package.
-3. `protected`: Member is only accessible within the same package and subclasses of given class.
+3. `protected`: Member is only accessible (oh boy, define accessible) within the same package and subclasses of given class.
 4. `public`: Member is accessible everywhere.
 
 ### Table 4.2: Access modifiers
@@ -70,11 +70,12 @@ More restrictive to least restrictive.
 
 ### Protected
 
-0. A piece of code in this class can access a member in a superclass in a different package if that member is protected.
-1. A given class C may access protected members of superclass via any reference of type C or any subclass of C that is set.
-2. A given class C may not access protected members of superclass via a reference of type any superclass of C.
+0. ~~A piece of code in this class can access a member in a superclass in a different package if that member is protected.~~
+1. ~~A given class C may access protected members of superclass via any reference of type C or any subclass of C that is set.~~
+2. ~~A given class C may not access protected members of superclass via a reference of type any superclass of C.~~
 3. What happens when B and C extend A, B and C are in a different package than A, and B tries to access a protected member of A via a reference of type C?
-4. When a protected member is inherited by a class, the member is protected for the class. 
+4. A given protected member of class C is inherited with access modifier protected by subclasses of C.
+5. Code in a class C may access any protected member of C by means of a reference of type C or any of its subtypes.
 
 ## Optional Specifiers
 

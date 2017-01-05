@@ -1,0 +1,15 @@
+public void task() {}
+---
+yes
+***
+void public task() {}
+---
+no, access modifier goes before return type
+***
+void task() { }
+---
+yes
+***
+default void task() {}
+---
+no, default is not a valid access modifier
