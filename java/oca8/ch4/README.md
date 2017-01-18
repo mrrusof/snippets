@@ -1,5 +1,11 @@
 # Chapter 4
 
+## TODO
+
+- What are the rules for assignment of primitive types?
+  - Why is `byte task() { return 1+1; }` legal and `byte task() { byte b = 1; return b+b; }` is illegal?
+- Does default package access correspond to protected rule for package access?
+
 ## Syntax of method declaration
 
 ```java
@@ -73,13 +79,32 @@ More restrictive to least restrictive.
 0. ~~A piece of code in this class can access a member in a superclass in a different package if that member is protected.~~
 1. ~~A given class C may access protected members of superclass via any reference of type C or any subclass of C that is set.~~
 2. ~~A given class C may not access protected members of superclass via a reference of type any superclass of C.~~
-3. What happens when B and C extend A, B and C are in a different package than A, and B tries to access a protected member of A via a reference of type C?
-4. A given protected member of class C is inherited with access modifier protected by subclasses of C.
-5. Code in a class C may access any protected member of C by means of a reference of type C or any of its subtypes.
+3. ~~What happens when B and C extend A, B and C are in a different package than A, and B tries to access a protected member of A via a reference of type C?~~
+4. ~~A given protected member of class C is inherited with access modifier protected by subclasses of C.~~
+5. ~~Code in a class C may access any protected member of C by means of a reference of type C or any of its subtypes.~~
+6. Access to protected members is allowed only when one of the following conditions is satisfied.
+  1. When Loc and Decl are in same package, Loc can do the following.
+     1. Call a method of the same name by means of a reference that inherits method.
+     2. Read/write field by means of a reference that inherits field.
+  2. When Loc is in a class that inherits member, Loc can do the following.
+     1. Call a method of the same name by means of a reference R that
+     inherits method and is subtype of Loc. Corresponds to test case
+     ProtectedMemberAccess1.
+     2. Read/write field by means of a reference that inherits field and
+     is a subtype of Loc.
 
 ## Optional Specifiers
 
 Optional specifiers can appear before the access modifier.
+
+Relevant optional specifiers are the following.
+
+- `static`
+- `abstract`
+- `final`
+- `synchronized`
+- `native`
+- `strictfp`
 
 ## Return type
 
@@ -97,6 +122,23 @@ public static byte task() {
   byte b = 2;
   b = 1;
   return b;
+}
+```
+
+Examples that pass.
+
+```java
+public static byte task1() { return 1 + 1; }
+public static byte task2() { return (short) 1; }
+public static byte task3() { return (short) (1 + 1); }
+```
+
+Examples that **do not** pass.
+
+```java
+public static byte task() {
+  byte b = 1;
+  return b + b;
 }
 ```
 

@@ -1,0 +1,23 @@
+void task(int m, int... n) { System.out.println(n.length); }
+public static void main(String... args) { task(1); }
+---
+0
+
+***
+void task(int m, int... n) { System.out.println(n.length); }
+public static void main(String... args) { task(1, null); }
+---
+null pointer exception
+
+***
+void task(int m, int... n) { System.out.println(n.length); }
+public static void main(String... args) { task(1, null, null); }
+---
+method varargs3 cannot be applied to types int,<null>,<null>
+
+***
+void task(int m, int... n) { System.out.println(n.length); }
+public static void main(String... args) { task(1, null, null); }
+---
+2
+

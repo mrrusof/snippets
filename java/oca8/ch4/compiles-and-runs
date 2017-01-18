@@ -13,3 +13,108 @@ yes
 default void task() {}
 ---
 no, default is not a valid access modifier
+***
+void task() {}
+---
+yes
+***
+public final void task() { }
+---
+yes
+***
+final public void task() { }
+---
+yes, optional specifiers can appear before any access modifier
+***
+static public final void task() { }
+---
+yes, optional specifiers can appear in a given method declaration before and after any access modifier
+***
+public byte task() { return 1; }
+---
+yes
+***
+public byte task() {
+  byte b = 1;
+  return b;
+}
+---
+yes
+***
+public byte task() {
+  byte b = 1 + 1;
+  return b;
+}
+---
+yes
+***
+public byte task() {
+  byte b = 1;
+  return b + b;
+}
+---
+no, type of expression `b + b` is `int`.
+***
+public static byte task() { return 1 + 1; }
+---
+yes
+***
+public static byte task() { return (short) 1; }
+---
+yes
+***
+public static byte task() { return (short) (1 + 1); }
+---
+yes
+***
+public static byte task() { return (int) (1 + 1); }
+---
+yes
+***
+public static byte task() { return (byte) 1 + (byte) 1; }
+---
+yes
+***
+public static Object task() { return "hola"; }
+---
+yes
+***
+public static String task() { return (String) (Object) "hola"; }
+---
+yes
+***
+public static float task() { return 1.0; }
+---
+no, type of `1.0` is double.
+***
+public static float task() { return (float) 1.0; }
+---
+yes
+***
+public static float task() { return 1.0f; }
+---
+yes
+***
+public void task(int... nn) { }
+---
+yes
+***
+public void task(int... nn) { }
+public void callTask() { task(null); }
+---
+yes
+***
+public void task(int... nn) { }
+public void callTask() { task(null) }
+---
+no, missing semicolon in line 2
+***
+void task(int m, int... n) { System.out.println(n.length()); }
+void callTask() { task(1); }
+---
+no, there is no method length for array n
+***
+void task(int m, int... n) { System.out.println(n.length); }
+void callTask() { task(1); }
+---
+yes
