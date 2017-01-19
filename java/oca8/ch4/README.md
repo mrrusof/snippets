@@ -262,35 +262,157 @@ Default values are the same for static and instance fields.
 
 Constants are fields declared with specifiers `static final`.
 
-*TODO* example where you mutate object by means of a constant reference.
+Of course you can mutate an instance by means of a constant reference. For example, the following code prints "are we human?."
+
+```java
+import java.util.*;
+
+public class Constants {
+  public static final List<String> l = new ArrayList<>();
+  public static void m() {
+    l.add("are we human?");
+    System.out.println("l = " + l);
+  }
+}
+```
+
+
 
 # Static initialization
 
 Prepend `static` to initializer.
 
-- *TODO* example: initialize constant
-- *TODO* example: declare constant and don't initialize it
-- *TODO* example: reassign constant
+Example: initialize constant.
+
+```java
+public class Constants {
+  private static final int SECS_PER_HOUR;
+  static {
+    int secsPerMin = 60;
+    int minsPerHour = 60;
+    SECS_PER_HOUR = secsPerMin * minsPerHour;
+  }
+}
+```
+
+Example: you cannot declare a constant and leave it uninitialized.
+Line 2 gets compile error "variable YOU_HAVE_TO_TOUCH_THIS not initialized in the default constructor."
+
+```java
+1: public class Constants {
+2:   private static final int YOU_HAVE_TO_TOUCH_THIS;
+3:    Constans() {
+4:      YOU_HAVE_TO_TOUCH_THIS = 1;  // this is not enough
+5:    }
+6: }
+```
 
 # Static imports
 
-In a given class, static methods of the class have preference over imported static methods.
+In a given class, static methods of the class have preference over imported static methods. Consider the following example.
 
-*TODO* Does the same apply to static fields?
+```java
+import static java.util.Arrays.asList;
+import static java.lang.System.out;
 
-*TODO* What happens when you import two static members that have the same name?
+public class StaticImports {
+  private void asList(Object... oo) {
+    out.println("oo = " + Arrays.toString(oo));
+  }
+  public static void main(String[] args) {
+    asList("one", "two");
+    // fails with "incompatible types: void cannot be converted to List<String>"
+    // List<String> ss = asList("three", "four");
+    List<String> ss = Arrays.asList("three", "four");
+    out.println("ss = " + ss);
+  }
+}
+```
+
+The example gives as output the following.
+
+```java
+oo = [one, two]
+ss = [three, four]
+```
+You may import two static members with the same name as long as you don't use any (inane).
+
+```java
+file somePackage/StaticConstants1.java
+
+package somePackage;
+
+public class StaticConstants1 {
+  public static final int C = 1;
+}
+
+file somePackage/StaticConstants1.java
+
+package somePackage;
+
+public class StaticConstants1 {
+  public final static int C = 2;
+}
+
+file main/Main.java
+
+package main;
+
+import static somePackage.StaticConstants1.C;
+import static somePackage.StaticConstants2.C;
+
+public class Main {
+  public static void main(String[] args) {
+     System.out.println("hola");
+     // Without the following line, example compiles
+     // With following line, we get "reference to C is ambiguous"
+     // System.out.println("C = " + C);
+  }
+}
+```
 
 # Parameter passing
 
 Java is "pass-by-value".
 
-Assigning a parameter does not change value of any corresponding variable at the calling location.
+(inane) Assigning a parameter does not change value of any corresponding variable at the calling location. For example, method `passByValue` writes local variable `i` three times and that does not change the value of `n`.
 
-*TODO* example
+public class Main {
+  public static void main(String... a) {
+    int n = 3;
+    passByValue(n);
+    System.out.println("n = " + n);
+  }
 
-Mutating the state of a parameter does change value of any corresponding variable at the calling location.
+  static void passByValue(int i) {
+    while(i > 0) {
+      System.out.println("i = " + i);
+      i--;
+    }
+  }
+}
 
-*TODO* example
+(inane) Mutating the state of a parameter **does** change value of any corresponding variable at the calling location.
+
+public class Main {
+  static public void setThree(List<String> m) {
+    m.set(0, "three");
+  }
+
+  public static void main(String... a) {
+    List<String> l = Arrays.asList("one", "two");
+    System.out.println("l = " + l);
+    setThree(l);
+    System.out.println("l = " + l);
+  }
+}
+
+The example prints the following.
+
+```
+l = [one, two]
+l = [three, two]
+```
 
 # Return value
 

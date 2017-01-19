@@ -21,3 +21,19 @@ public static void main(String... args) { task(1, null, null); }
 ---
 2
 
+***
+public class Model {
+  static public int n = 10;
+  public static void main(String args[]) {
+    Model.n = 20;
+    Model m = new Model();
+    m.n = 30;
+    m = null;
+    m.n = 40;
+    System.out.println(Model.n);
+  }
+}
+---
+40
+
+***
