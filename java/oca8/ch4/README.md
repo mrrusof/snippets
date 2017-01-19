@@ -93,6 +93,15 @@ More restrictive to least restrictive.
      2. Read/write field by means of a reference that inherits field and
      is a subtype of Loc.
 
+## Package
+
+1. Access to package members is allowed only when one of the following
+   conditions is satisfied.
+  1. When Loc and Decl are in same package, Loc can do the following.
+     1. Call method by means of a reference that inherits
+        method. (This is different from rule 6.1.1 of Protected.)
+     2. Read/write field by means of a reference that inherits field. 
+
 ## Optional Specifiers
 
 Optional specifiers can appear before the access modifier.
