@@ -75,30 +75,30 @@ More restrictive to least restrictive.
 
 ### Protected
 
-0. ~~A piece of code in this class can access a member in a superclass in a different package if that member is protected.~~
-1. ~~A given class C may access protected members of superclass via any reference of type C or any subclass of C that is set.~~
-2. ~~A given class C may not access protected members of superclass via a reference of type any superclass of C.~~
-3. ~~What happens when B and C extend A, B and C are in a different package than A, and B tries to access a protected member of A via a reference of type C?~~
-4. ~~A given protected member of class C is inherited with access modifier protected by subclasses of C.~~
-5. ~~Code in a class C may access any protected member of C by means of a reference of type C or any of its subtypes.~~
-6. Access to protected members is allowed only when one of the following conditions is satisfied.
-  1. When Loc and Decl are in same package, Loc can do the following.
-     1. Call a method of the same name by means of a reference that inherits method.
-     2. Read/write field by means of a reference that inherits field.
-  2. When Loc is in a class that inherits member, Loc can do the following.
-     1. Call a method of the same name by means of a reference R that
+1. ~~A piece of code in this class can access a member in a superclass in a different package if that member is protected.~~
+2. ~~A given class C may access protected members of superclass via any reference of type C or any subclass of C that is set.~~
+3. ~~A given class C may not access protected members of superclass via a reference of type any superclass of C.~~
+4. ~~What happens when B and C extend A, B and C are in a different package than A, and B tries to access a protected member of A via a reference of type C?~~
+5. ~~A given protected member of class C is inherited with access modifier protected by subclasses of C.~~
+6. ~~Code in a class C may access any protected member of C by means of a reference of type C or any of its subtypes.~~
+7. Access to protected members is allowed only when one of the following conditions is satisfied.
+  i. When Loc and Decl are in same package, Loc can do the following.
+     a. Call a method of the same name by means of a reference that inherits method.
+     b. Read/write field by means of a reference that inherits field.
+  ii. When Loc is in a class that inherits member, Loc can do the following.
+     a. Call a method of the same name by means of a reference R that
      inherits method and is subtype of Loc. Corresponds to test case
      ProtectedMemberAccess1.
-     2. Read/write field by means of a reference that inherits field and
+     b. Read/write field by means of a reference that inherits field and
      is a subtype of Loc.
 
-## Package
+### Package
 
 1. Access to package members is allowed only when one of the following
    conditions is satisfied.
   1. When Loc and Decl are in same package, Loc can do the following.
      1. Call method by means of a reference that inherits
-        method. (This is different from rule 6.1.1 of Protected.)
+        method. (This is different from rule 7.i.a of Protected.)
      2. Read/write field by means of a reference that inherits field. 
 
 ## Optional Specifiers
@@ -296,7 +296,10 @@ public class Constants {
 ```
 
 Example: you cannot declare a constant and leave it uninitialized.
-Line 2 gets compile error "variable YOU_HAVE_TO_TOUCH_THIS not initialized in the default constructor."
+Line 2 gets compile error "variable YOU_HAVE_TO_TOUCH_THIS not
+initialized in the default constructor" in version XXX or "cannot
+assign a value to final variable YOU_HAVE_TO_TOUCH_THIS" in
+version 1.8.0_112.
 
 ```java
 1: public class Constants {
@@ -335,6 +338,7 @@ The example gives as output the following.
 oo = [one, two]
 ss = [three, four]
 ```
+
 You may import two static members with the same name as long as you don't use any (inane).
 
 ```java
@@ -377,6 +381,7 @@ Java is "pass-by-value".
 
 (inane) Assigning a parameter does not change value of any corresponding variable at the calling location. For example, method `passByValue` writes local variable `i` three times and that does not change the value of `n`.
 
+```java
 public class Main {
   public static void main(String... a) {
     int n = 3;
@@ -391,9 +396,11 @@ public class Main {
     }
   }
 }
+```
 
 (inane) Mutating the state of a parameter **does** change value of any corresponding variable at the calling location.
 
+```java
 public class Main {
   static public void setThree(List<String> m) {
     m.set(0, "three");
@@ -406,6 +413,7 @@ public class Main {
     System.out.println("l = " + l);
   }
 }
+```
 
 The example prints the following.
 
@@ -418,20 +426,86 @@ l = [three, two]
 
 You may ignore the return value of a call.
 
-*TODO* example: ignore a primitive
-
-*TODO* example: ignore a reference
+```java
+public class Main {
+  public static int incr(int n) { return ++n; }
+  public static void main(String... args) {
+    int n = 1;
+    incr(n);
+    System.out.println(n); // 1
+  }
+}
+```
 
 # Overloading methods
 
-A method name is overloaded when the following conditions are met. (*TODO* check.)
+A method is overloaded when there are two or more method declarations
+for the same method name and different sequence of parameter types.
 
-1. For a given class, there are at least two different method declarations with the given method name.
-2. For each method declaration, the parameter list corresponds to a sequence of types that is different than any other sequence.
+```java
+import static java.lang.System.out;
+
+public class Main {
+  public static void m(int n) {
+    out.println("this is int n: " + n);
+  }
+  public static void m(byte n) {
+    out.println("this is byte n: " + n);
+  }
+  public static void main(String... args) {
+    m(1); // "this is int n: 1"
+    byte b = 2;
+    m(b); // "this is byte n: 2"
+    m(b + b); // "this is int n: 4"
+  }
+}
+```
+
+Different access modifiers, specifiers, return types, and exception
+lists do not make two declarations different for the purpose of
+overloading, for example:
+
+```java
+import static java.lang.System.out;
+
+public class Main {
+    public static void m(int n) {
+        out.println("this is int n: " + n);
+    }
+    static void m(int n) { // gives "method m(int) is already defined in class Main"
+        out.println("this is int n: " + n);
+    }
+    void m(int n) { // gives "method m(int) is already defined in class Main"
+        out.println("this is int n: " + n);
+    }
+    public static int m(int n) { // gives "method m(int) is already defined in class Main"
+        out.println("this is int n: " + n);
+        return n;
+    }
+    public void m(int n) { // gives "method m(int) is already defined in class Main"
+        out.println("this is int n: " + n);
+    }
+    public void m(int n) throws Exception { // gives "method m(int) is already defined in class Main"
+        out.println("this is int n: " + n);
+    }
+    public static void main(String... args) {
+        m(1);
+    }
+}
+```
 
 ## A vararg parameter and an array parameter are considered the same for overloading
 
-*TODO* example
+```java
+class Varargs {
+    public static void m(String... a) {
+        out.println(Arrays.toString(a));
+    }
+    public static void m(String[] a) { // compile error "cannot declare both m(String[]) and m(String...) in Varargs"
+        out.println(Arrays.toString(a));
+    }
+}
+```
 
 ## Autoboxing
 

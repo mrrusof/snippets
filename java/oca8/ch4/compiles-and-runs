@@ -135,3 +135,31 @@ public class Tester {
 }
 ---
 yes
+***
+ 1 : public class Main {
+ 2 :   public static void m(int n) {
+ 3 :     out.println("this is int n: " + n);
+ 4 :   }
+ 5 :   static void m(int n) {
+ 6 :     out.println("this is int n: " + n);
+ 7 :   }
+ 8 :   public static void main(String... args) {
+ 9 :     m(1);
+10 :   }
+11 : }
+---
+no, line 5 gives "method m(int) is already defined in class Main"
+***
+ 1: import static java.lang.System.out;
+ 2: import static java.util.Arrays.toString;
+ 3:
+ 4: public class Main {
+ 5:   private static void m(String... a) {
+ 6:     out.println(toString(a));
+ 7:   }
+ 8:   public static void main(String[] args) {
+ 9:     m("one", "two");
+10:   }
+11: }
+---
+no because line 6 calls method toString given by class Object, not by Arrays.

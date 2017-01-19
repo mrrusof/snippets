@@ -37,3 +37,52 @@ public class Model {
 40
 
 ***
+1 : public class Model {
+2 :   private static final int C;
+3 :   public static void main(String... args) {
+4 :     C = 1;
+5 :   }
+6 : }
+---
+no, line 4 cannot assign a value to final variable C
+
+***
+ 1 : public class Model {
+ 2 :   private static final int C;
+ 3 :   public void m() {
+ 4 :     C = 1;
+ 5 :   }
+ 6 :   public static void main(String... args) {
+ 7 :     new Model().m();
+ 8 :   }
+ 9 : }
+---
+no, line 4 cannot assign a value to final variable C
+
+***
+public class Main {
+  public static int incr(int n) {
+    return ++n;
+  }
+  public static void main(String... args) {
+    int n = 1;
+    incr(n);
+    System.out.println(n);
+  }
+}
+---
+1
+
+***
+public class Main {
+  public static int incr(int n) {
+    return ++n;
+  }
+  public static void main(String... args) {
+    int n = 1;
+    n = incr(n);
+    System.out.println(n);
+  }
+}
+---
+2

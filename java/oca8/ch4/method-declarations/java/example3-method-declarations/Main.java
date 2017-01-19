@@ -93,7 +93,7 @@ public class Main {
         out.println();
     }
     static public void varargs2(int[] nn) {
-        out.print("varargs1: ");
+        out.print("varargs2: ");
         if(nn == null)
             out.print("nn is null!");
         else
