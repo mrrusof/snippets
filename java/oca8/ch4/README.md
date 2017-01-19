@@ -4,7 +4,6 @@
 
 - What are the rules for assignment of primitive types?
   - Why is `byte task() { return 1+1; }` legal and `byte task() { byte b = 1; return b+b; }` is illegal?
-- Does default package access correspond to protected rule for package access?
 
 ## Syntax of method declaration
 
@@ -219,8 +218,37 @@ Always write a pair of parenthesis.
 For given class.
 
 1. Name of class + period + method
-2. Reference of type of class + period + method (even if reference is not set (*TODO* example) or null (*TODO* example)).
+2. Reference of type of class + period + method, even when
+   1. reference is null, for example (entry point is `Tester.main()`.)
+```java
+file Model.java
 
+public class Model {
+  public static void m() { System.out.println("m!"); }
+}
+
+file Tester.java
+
+public class Tester {
+  public static void main(String... args) {
+    Model m = null;
+    m.m();
+  }
+}
+```
+
+    2. or not initialized (Same entry point.)
+
+```java
+file Tester.java
+
+public class Tester {
+  static Model m;
+  public static void main(String... args) {
+    m.m();
+  }
+}
+```
 
 # Reference instance member from static code
 

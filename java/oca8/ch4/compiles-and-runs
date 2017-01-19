@@ -118,3 +118,20 @@ void task(int m, int... n) { System.out.println(n.length); }
 void callTask() { task(1); }
 ---
 yes
+***
+file Model.java
+
+public class Model {
+  public static void m() { System.out.println("m!"); }
+}
+
+file Tester.java
+
+public class Tester {
+  public static void test() {
+    Model m = null;
+    m.m();
+  }
+}
+---
+yes
