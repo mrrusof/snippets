@@ -82,14 +82,14 @@ More restrictive to least restrictive.
 5. ~~A given protected member of class C is inherited with access modifier protected by subclasses of C.~~
 6. ~~Code in a class C may access any protected member of C by means of a reference of type C or any of its subtypes.~~
 7. Access to protected members is allowed only when one of the following conditions is satisfied.
-  i. When Loc and Decl are in same package, Loc can do the following.
-     a. Call a method of the same name by means of a reference that inherits method.
-     b. Read/write field by means of a reference that inherits field.
-  ii. When Loc is in a class that inherits member, Loc can do the following.
-     a. Call a method of the same name by means of a reference R that
-     inherits method and is subtype of Loc. Corresponds to test case
+  1. When Loc and Decl are in same package, Loc can do the following.
+     1. Call a method of the same name by means of a reference that inherits method.
+     2. Read/write field by means of a reference that inherits field.
+  2. When Loc is in a class that inherits member, Loc can do the following.
+     1. Call a method of the same name by means of a reference R that
+     nherits method and is subtype of Loc. Corresponds to test case
      ProtectedMemberAccess1.
-     b. Read/write field by means of a reference that inherits field and
+     2. Read/write field by means of a reference that inherits field and
      is a subtype of Loc.
 
 ### Package
@@ -208,12 +208,12 @@ Always write a pair of parenthesis.
 - pond.goose
   - LostDuckling 
 
-# Purposes of static methods
+## Purposes of static methods
 
 1. Code that does not require state.
 2. Code that operates on shared state.
 
-# Ways to call static methods
+## Ways to call static methods
 
 For given class.
 
@@ -250,15 +250,15 @@ public class Tester {
 }
 ```
 
-# Reference instance member from static code
+## Reference instance member from static code
 
 Don't do that.
 
-# Initialization of static and instance fields
+## Initialization of static and instance fields
 
 Default values are the same for static and instance fields.
 
-# Constants
+## Constants
 
 Constants are fields declared with specifiers `static final`.
 
@@ -278,7 +278,7 @@ public class Constants {
 
 
 
-# Static initialization
+## Static initialization
 
 Prepend `static` to initializer.
 
@@ -310,7 +310,7 @@ version 1.8.0_112.
 6: }
 ```
 
-# Static imports
+## Static imports
 
 In a given class, static methods of the class have preference over imported static methods. Consider the following example.
 
@@ -375,7 +375,7 @@ public class Main {
 }
 ```
 
-# Parameter passing
+## Parameter passing
 
 Java is "pass-by-value".
 
@@ -422,7 +422,7 @@ l = [one, two]
 l = [three, two]
 ```
 
-# Return value
+## Return value
 
 You may ignore the return value of a call.
 
@@ -437,7 +437,7 @@ public class Main {
 }
 ```
 
-# Overloading methods
+## Overloading methods
 
 A method is overloaded when there are two or more method declarations
 for the same method name and different sequence of parameter types.
@@ -494,7 +494,7 @@ public class Main {
 }
 ```
 
-## A vararg parameter and an array parameter are considered the same for overloading
+### A vararg parameter and an array parameter are considered the same for overloading
 
 ```java
 class Varargs {
@@ -507,7 +507,7 @@ class Varargs {
 }
 ```
 
-## Autoboxing and overloading by varying primitive vs corresp. reference type
+### Autoboxing and overloading by varying primitive vs corresp. reference type
 
 A method that takes reference type that corresponds to a primite,
 works fine with corresponding primitive, for example:
@@ -558,7 +558,7 @@ public class Main {
 }
 ```
 
-## Java picks the closest supertype for a given actual parameter
+### Java picks the closest supertype for a given actual parameter
 
 The rule applies when you vary reference types, for example:
 
@@ -594,7 +594,7 @@ public class Main {
 }
 ```
 
-## Recap: precedence of overloaded methods
+### Recap: precedence of overloaded methods
 
 Given an overloaded method, Java considers declarations with similar parameter lists in the following order.
 
@@ -603,7 +603,7 @@ Given an overloaded method, Java considers declarations with similar parameter l
 3. Autoboxed type
 4. Varargs
 
-### Example: supertype of primitive type vs varargs
+#### Example: supertype of primitive type vs varargs
 
 ```java
 public class Main {
@@ -620,7 +620,7 @@ public class Main {
 }
 ```
 
-### Example: supertype of primitive type vs array
+#### Example: supertype of primitive type vs array
 
 ```java
 public class Main {
@@ -638,7 +638,7 @@ public class Main {
 }
 ```
 
-### Example: reference type vs varargs
+#### Example: reference type vs varargs
 
 When type of actual is two conversions away from reference type (byte
 -> int -> Integer), varargs is taken. Also, when given null, reference
@@ -660,7 +660,7 @@ public class Main {
 }
 ```
 
-# Autoboxing only works for corresponding reference type
+## Autoboxing only works for corresponding reference type
 
 For example, Java does not convert `byte` to `Integer` for you.
 
@@ -675,7 +675,7 @@ public class Main {
 }
 ```
 
-# Autoboxing primitive values to Object
+## Autoboxing primitive values to Object
 
 Does not contradict "Autoboxing only works for corresponding reference
 type." By autoboxing a primitive to corresponding ref type you can
@@ -693,14 +693,16 @@ public class Main {
 }
 ```
 
-## Declare a constructor
+## Constructors
 
-Method declaration meets the following two conditions.
+### Declare a constructor
+
+Declaration meets the following two conditions.
 
 1. The method name is the name of the class.
 2. There is no return type.
 
-# A class may expose no constructor
+### A class may expose no constructor
 
 Just declare any constructor and make it private, for example:
 
@@ -710,45 +712,213 @@ class WhatIsGoingOn {
 }
 ```
 
-# Overload constructor
+## Overload constructor
 
-Declare two constructors with different list of parameters.
+Declare two constructors with different type of parameters.
 
-# Call a constructor from another
+```java
+public class Main {
+  Main(int n) {
+    System.out.println("Main(int)");
+  }
+  // constructor Main(int) is already defined in class Main
+  // Main(int m) {
+  //   System.out.println("Main(int)");
+  // }
+  Main(float m) {
+    System.out.println("Main(float)");
+  }
+  public static void main(String... args) {
+    new Main(1); // prints "Main(int)"
+    new Main(1f); // prints "Main(float)"
+  }
+}
+```
 
-Call`this` with corresponding parameters in the first statement of the
-calling constructor. *TODO* example.
+## Call a constructor from another
 
-# Final instance fields
+Call `this` with corresponding parameters on the first statement of the
+calling constructor.
 
-*TODO* example: initialize final field in constructor.
-*TODO* example: declare final field and don't initialize it.
-*TODO* example: reassign final field
+```java
+class Car {
+    private int weight;
+    private String color = "red";
+    private static final String DEF_COLOR = "red";
+    Car(int weight) {
 
-# Order of initialization
+        // cannot reference color before supertype constructor has been called
+        // this(weight, color);
+
+        // call to this must be first statement in constructor
+        // System.out.println("Default color");
+        // this(weight, "red");
+
+        // this(weight, "red");
+
+        // better than last attempt
+        this(weight, DEF_COLOR);
+    }
+    Car(int weight, String color) {
+        this.weight = weight;
+        this.color = color;
+    }
+    public String toString() {
+        return "Car weights " + weight + " kgs and is " + color + ".";
+    }
+    public static void main(String... args) {
+        System.out.println(new Car(1000).toString());
+    }
+}
+```
+
+## Constructor chaining
+
+That's when for a given class there are several constructors such that
+one calls another that has one more parameter until getting to a
+constructor that does all initialization work, for example:
+
+```java
+class ConstructorChaining {
+    private String name;
+    private Integer id;
+    private Float red;
+    ConstructorChaining() {
+        this("default");
+    }
+    ConstructorChaining(String name) {
+        this(name, 1);
+    }
+    ConstructorChaining(String name, int id) {
+        this(name, id, 1.25f);
+    }
+    ConstructorChaining(String name, int id, float red) {
+        this.name = name;
+        this.id = id;
+        this.red = red;
+    }
+    public String toString() {
+        return "ConstructorChaining(" + name + ", " + id + ", " + red + ");";
+    }
+    public static void main(String... args) {
+        System.out.println(new ConstructorChaining());
+    }
+}
+```
+
+
+## Final instance fields
+
+A final instance field may be initialized in a constructor.
+
+```java
+class QuadPrismHeight2 { // initialization of final instance fields
+    private final int h;
+    private final int volume;
+    QuadPrismHeight2(int w, int l) {
+        volume = w * h * l; // this one here
+    }
+    {
+        h = 2; // this is initialized before the constructor runs
+    }
+    public String toString() {
+        return "QuadPrismHeight2.volume = " + volume;
+    }
+    public static void main(String... args) {
+        System.out.println(new QuadPrismHeight2(1, 3));
+    }
+}
+```
+
+You must initialize a final instance field.  When you don't initialize
+other instance fields, they are initialized to the default value for
+their type.  By the time the constructor finishes, all final instance
+fields must have been set.
+
+```java
+class Rectangle {
+    private String name;
+    private final int l;
+    private final int h;
+    private final int area;
+    Rectangle(int l, int h) {
+        this.l = l;
+        this.h = h;
+    } // compile error here: variable area might not have been initialized
+    public String toString() {
+        return "Rectangle '" + name + "', dimensions " + l + "x" + h;
+    }
+    public static void main(String... args) {
+        // comment declaration of final instance field area
+        // to print "Rectangle 'null', dimensions 2x3"
+        System.out.println(new Rectangle(2,3));
+    }
+}
+```
+
+## Order of initialization
 
 On program start.
 
 1. Initialize superclass
 2. Static variable declarations and static initializers in the order they appear in the file.
 
+Example:
+
+```java
+public class Main {
+    static int L = 2;
+    static int W = 3;
+    static int H = 4;
+    static int V;
+    static { V = L * W * H; }
+    public static void main(String[] args) {
+        System.out.println("V = " + V); // prints "V = 24"
+    }
+}
+```
+
 On instantiation.
 
-3. instance variable declarations and instance initializers int eh order they appears in the file.
+3. instance variable declarations and instance initializers int the order they appear in the file.
 4. Constructor
+
+Example:
+
+```java
+class Instantiation {
+    int L = 2;
+    int H = 3;
+    int A = L * H;
+    { System.out.println("initializer: A = " + A); }
+    Instantiation() {
+        A = 0;
+        System.out.println("constructor: A = " + A);
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        // the following line prints:
+        // initializer: A = 6
+        // constructor: A = 0 
+        Instantiation i = new Instantiation();
+    }
+}
+```
 
 *TODO* example: multiple classes w/ static fields and initializers
 *TODO* example: static initializers vs main method
 *TODO* example like the one in p. 203
 
-# Encapsulation
+## Encapsulation
 
 Encapsulation means construct your class such that the state of a given instance is controlled exclusively through exposed methods. The way of doing that is the following.
 
 1. Make instance fields private.
 2. Make public the methods that manipulate those fields (including but not limited to getters/setters).
 
-# JavaBeans conventions for encapsulation
+## JavaBeans conventions for encapsulation
 
 1. Properties are private.
 2. A given getter method begins with `is` or `get` if the corresponding property is `boolean`.
@@ -756,18 +926,18 @@ Encapsulation means construct your class such that the state of a given instance
 4. Setter methods begin with `set`.
 5. The name of a getter/setter is in camelCase.
 
-## Making your class immutable is an alternative to encapsulation
+### Making your class immutable is an alternative to encapsulation
 
 When you require that changes to a given instance are controlled, either encapsulate state or make the instance immutable.
 
-# Immutable classes
+## Immutable classes
 
 1. Allow caller to set state.
 2. Omit setters.
 
 *TODO* example of immutable class.
 
-# Defensive copy
+## Defensive copy
 
 *TODO* example of class that appears to be immutable but is not.
 
@@ -775,7 +945,7 @@ Defensive copy is copying any mutable object passed to a constructor or returned
 
 *TODO*  convert previous example in immutable class by means of defensive copy.
 
-# Lambda expressions
+## Lambda expressions
 
 Syntax w/o optional parts.
 
@@ -791,11 +961,11 @@ Syntax with optional parts
 
 *TODO* examples of valid lambdas.
 
-# What variables can my lambda access?
+## What variables can my lambda access?
 
 *TODO* investigate list
 
-# Predicates and functional interfaces
+## Predicates and functional interfaces
 
 An interface with a single boolean method is a _functional interface_.
 A predicate written as lambda expression corresponds to a functional interface.
@@ -803,11 +973,11 @@ Don't declare your own functional interface, use interface `java.util.function.P
 
 *TODO* example
 
-# (Array)List's `removeIf` method
+## (Array)List's `removeIf` method
 
 *TODO* example of `removeIf`.
 
-# Practice this
+## Practice this
 
 - Identify correct and incorrect method declarations.
 - Identify access to a member from a context that is fobidden by corresponding access modifier.

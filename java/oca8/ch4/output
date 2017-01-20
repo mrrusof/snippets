@@ -86,3 +86,48 @@ public class Main {
 }
 ---
 2
+
+***
+public class Main {
+    static int L = 2;
+    static int W = 3;
+    static int H = 4;
+    static int V;
+    { V = L * W * H; }
+    public static void main(String[] args) {
+        System.out.println("V = " + V);
+    }
+}
+---
+V = 0
+
+***
+public class Main {
+    static int L = 2;
+    static int W = 3;
+    static int H = 4;
+    static { V = L * W * H; }
+    static int V;
+    public static void main(String[] args) {
+        System.out.println("V = " + V);
+    }
+}
+---
+V = 24
+
+***
+public class Main {
+    static { V = L * W * H; }
+    static int L = 2;
+    static int W = 3;
+    static int H = 4;
+    static int V;
+    public static void main(String[] args) {
+        System.out.println("V = " + V);
+    }
+}
+---
+no, forward reference to L, W, and H are illegal
+
+***
+
