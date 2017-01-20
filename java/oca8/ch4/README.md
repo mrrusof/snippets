@@ -507,23 +507,94 @@ class Varargs {
 }
 ```
 
-## Autoboxing
+## Autoboxing and overloading by varying primitive vs corresp. reference type
 
-A method that takes autoboxed reference type works fine with corresponding primitive.
+A method that takes reference type that corresponds to a primite,
+works fine with corresponding primitive, for example:
 
-*TODO* example
+```java
+public class Main {
+  public static void fly(Integer numMiles) {
+    System.out.println("flying " + numMiles + " Integer miles");
+  }
+  public static void main(String... args) {
+    fly(3); // prints "flying 3 Integer miles"
+  }
+}
+```
 
-Overloaded method that varies primitive parameter type to corresponding class disables autoboxing.
+When that method is overloaded by substituting the reference type with
+the corresponding primitive type, the new method is selected for calls
+with values of the primitive type.
 
-*TODO* example
+```java
+public class Main {
+  public static void fly(Integer numMiles) {
+    System.out.println("flying " + numMiles + " Integer miles");
+  }
+  public static void fly(int numMiles) {
+    System.out.println("flying " + numMiles + " int miles");
+  }
+  public static void main(String... args) {
+    fly(3); // prints "flying 3 int miles"
+  }
+}
+```
+
+When type of actual is primitive, primitive supertype precedes ref
+type corresponding to type of actual.
+
+```java
+public class Main {
+  static void m(long n) {
+    System.out.println("long");
+  }
+  static void m(Integer n) {
+    System.out.println("Integer");
+  }
+  public static void main(String[] a) {
+    m(1); // prints "long"
+  }
+}
+```
 
 ## Java picks the closest supertype for a given actual parameter
 
-*TODO* example on references p. 193.
+The rule applies when you vary reference types, for example:
 
-*TODO* example on primitive types p. 193
+```java
+public class Main {
+  static void m(String s) {
+    System.out.println("string");
+  }
+  static void m(Object o) {
+    System.out.println("object");
+  }
+  public static void main(String... args) {
+    m(""); // prints "string"
+    m(42); // prints "object"
+  }
+}
+```
 
-## Precedence of overloaded methods
+The rule also applies when you vary primitive types, for example:
+
+```java
+public class Main {
+  static void m(byte n) {
+      System.out.println("byte");
+  }
+  static void m(int n) {
+      System.out.println("int");
+  }
+  public static void main(String... args) {
+    m((byte) 1); // prints "byte"
+    m((short) 1); // prints "int"
+  }
+}
+```
+
+## Recap: precedence of overloaded methods
 
 Given an overloaded method, Java considers declarations with similar parameter lists in the following order.
 
@@ -532,13 +603,95 @@ Given an overloaded method, Java considers declarations with similar parameter l
 3. Autoboxed type
 4. Varargs
 
-*TODO* example p. 194
+### Example: supertype of primitive type vs varargs
+
+```java
+public class Main {
+  static void m(float n) {
+    System.out.println("float");
+  }
+  static void m(int... nn) {
+    System.out.println("varargs");
+  }
+  public static void main(String... args) {
+    m(1); // prints "float"
+    m(1, 1); // prints "varargs"
+  }
+}
+```
+
+### Example: supertype of primitive type vs array
+
+```java
+public class Main {
+  static void m(float n) {
+    System.out.println("float");
+  }
+  static void m(int[] nn) {
+    System.out.println("int[]");
+  }
+  public static void main(String... args) {
+    m(1); // prints "float"
+    //m(1, 1); // no suitable method found for m(int,int)
+    m(null); // prints "int[]"
+  }
+}
+```
+
+### Example: reference type vs varargs
+
+When type of actual is two conversions away from reference type (byte
+-> int -> Integer), varargs is taken. Also, when given null, reference
+to method is ambiguous.
+
+```java
+public class Main {
+  static void m(Integer n) {
+    System.out.println("Integer");
+  }
+  static void m(int... nn) {
+    System.out.println("varargs");
+  }
+  public static void main(String... args) {
+    m((byte) 1); // prints "varargs"
+    m(1); // prints "Integer"
+    m(null); // reference to m is ambiguous
+  }
+}
+```
 
 # Autoboxing only works for corresponding reference type
 
-Java does not convert `int` to `Long` for you.
+For example, Java does not convert `byte` to `Integer` for you.
 
-*TODO* example p. 194
+```java
+public class Main {
+  static void m(Integer n) {
+    System.out.println("Integer");
+  }
+  public static void main(String... a) {
+    m((byte) 1); // compile error: byte cannot be converted to Integer
+  }
+}
+```
+
+# Autoboxing primitive values to Object
+
+Does not contradict "Autoboxing only works for corresponding reference
+type." By autoboxing a primitive to corresponding ref type you can
+perfectly fit the resulting object into type Object like so.
+
+
+```java
+public class Main {
+  static void m(Object o) {
+    System.out.println("Object: " + o.getClass().getSimpleName());
+  }
+  public static void main(String... a) {
+    m((byte) 1);
+  }
+}
+```
 
 ## Declare a constructor
 
