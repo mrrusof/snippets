@@ -130,4 +130,50 @@ public class Main {
 no, forward reference to L, W, and H are illegal
 
 ***
+class Car {
+    { System.out.println("initializing instance " + count); }
+    float r, g, b;
+    { r = g = b = 1f; }
+    public String toString() {
+        return "(" + r + "," + g + "," + b + ")";
+    }
+    Car(float r, float g, float b) {
+        System.out.println("constructing car " + count);
+        System.out.println(this);
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        System.out.println(this);
+        System.out.println("done constructing car " + count);
+        count++;
+    }
 
+    static int count = 0;
+    static { System.out.println(count + " cars created"); }
+
+    public static void main(String... a) {
+        System.out.println("Starting main program...");
+        Car c1 = new Car(3, 2, 1);
+        Car c2 = new Car(7, 6, 5);
+    }
+    { System.out.println("no more initializers for car " + count); }
+    static { System.out.println("no more static initializers"); }
+}
+---
+0 cars created
+no more static initializers
+Starting main program...
+initializing instance 0
+no more initializers for car 0
+constructing car 0
+(1.0,1.0,1.0)
+(3.0,2.0,1.0)
+done constructing car 0
+initializing instance 1
+no more initializers for car 1
+constructing car 1
+(1.0,1.0,1.0)
+(7.0,6.0,5.0)
+done constructing car 1
+
+***

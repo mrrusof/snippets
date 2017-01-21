@@ -220,35 +220,36 @@ For given class.
 1. Name of class + period + method
 2. Reference of type of class + period + method, even when
    1. reference is null, for example (entry point is `Tester.main()`.)
-```java
-file Model.java
 
-public class Model {
-  public static void m() { System.out.println("m!"); }
-}
-
-file Tester.java
-
-public class Tester {
-  public static void main(String... args) {
-    Model m = null;
-    m.m();
-  }
-}
-```
+    ```java
+    file Model.java
+    
+    public class Model {
+      public static void m() { System.out.println("m!"); }
+    }
+    
+    file Tester.java
+    
+    public class Tester {
+      public static void main(String... args) {
+        Model m = null;
+        m.m();
+      }
+    }
+    ```
 
     2. or not initialized (Same entry point.)
 
-```java
-file Tester.java
-
-public class Tester {
-  static Model m;
-  public static void main(String... args) {
-    m.m();
-  }
-}
-```
+    ```java
+    file Tester.java
+    
+    public class Tester {
+      static Model m;
+      public static void main(String... args) {
+        m.m();
+      }
+    }
+    ```
 
 ## Reference instance member from static code
 
@@ -858,7 +859,7 @@ class Rectangle {
 
 ## Order of initialization
 
-On program start.
+On reference to static member.
 
 1. Initialize superclass
 2. Static variable declarations and static initializers in the order they appear in the file.
@@ -880,7 +881,10 @@ public class Main {
 
 On instantiation.
 
-3. instance variable declarations and instance initializers int the order they appear in the file.
+1. Initialize superclass.
+2. Static variable declarations and static initializers in the order
+they appear in the file.
+3. Instance variable declarations and instance initializers int the order they appear in the file.
 4. Constructor
 
 Example:
@@ -907,9 +911,20 @@ public class Main {
 }
 ```
 
-*TODO* example: multiple classes w/ static fields and initializers
-*TODO* example: static initializers vs main method
-*TODO* example like the one in p. 203
+Example: static and instance initializers.
+
+```java
+class Tricky {
+    static { print(2); }
+    static void print(int n) { System.out.println(n); }
+    Tricky() { print(1); }
+    { print(3); }
+    public static void main(String... args) {
+        System.out.println("program started");
+    }
+    static { new Tricky(); }
+}
+```
 
 ## Encapsulation
 
@@ -932,18 +947,85 @@ When you require that changes to a given instance are controlled, either encapsu
 
 ## Immutable classes
 
-1. Allow caller to set state.
+A class is immutable when corresponding instances cannot mutate after
+initialization.
+
+Steps to construct ah immutable class.
+
+1. Allow user to set state upon instantiation.
 2. Omit setters.
+3. Do not return any reference to internal state.
+4. Copy any objects given by reference upon initialization.
 
-*TODO* example of immutable class.
+Example: 
 
-## Defensive copy
+```java
+class Immutable {
+    int v;
+    Immutable(int v) {
+        this.v = v;
+    }
+    public int getV() {
+        return v;
+    }
+    public String toString() {
+        return v + "";
+    }
 
-*TODO* example of class that appears to be immutable but is not.
+    public static void main(String... args) {
+        Immutable i = new Immutable(2);
+        System.out.println("i = " + i);
+    }
+}
+```
 
+### Defensive copy
+
+The following class is mutable.
+
+```java
+
+class NotImmutable {
+    StringBuilder s;
+    NotImmutable(StringBuilder s) {
+        this.s = s;
+    }
+    public String toString() {
+        return s.toString();
+    }
+
+    public static void main(String... args) {
+        StringBuilder s = new StringBuilder("hola");
+        NotImmutable ni = new NotImmutable(s);
+        System.out.println("ni = " + ni);
+        s.append(" mundo");
+        System.out.println("ni = " + ni);
+    }
+}
+```
+
+One way to make the class immutable is to apply defensive copy.
 Defensive copy is copying any mutable object passed to a constructor or returned from a setter so that state of object is not changed by means a reference to an object that is part of the state.
 
-*TODO*  convert previous example in immutable class by means of defensive copy.
+```java
+class ConvertedToImmutable {
+    StringBuilder s;
+    ConvertedToImmutable(StringBuilder s) {
+        this.s = new StringBuilder(s);
+    }
+    public String toString() {
+        return s.toString();
+    }
+
+    public static void main(String... args) {
+        StringBuilder s = new StringBuilder("hola");
+        ConvertedToImmutable ni = new ConvertedToImmutable(s);
+        System.out.println("ni = " + ni);
+        s.append(" mundo");
+        System.out.println("ni = " + ni);
+    }
+}
+```
 
 ## Lambda expressions
 
@@ -979,10 +1061,10 @@ Don't declare your own functional interface, use interface `java.util.function.P
 
 ## Practice this
 
-- Identify correct and incorrect method declarations.
-- Identify access to a member from a context that is fobidden by corresponding access modifier.
-- Recognize valid and invalid uses of static imports.
-- Identify illegal calls to static / instance methods.
-- Evaluate initialization code + constructors.
-- Recognize when a class is properly encapsulated.
+- ~~Identify correct and incorrect method declarations.~~
+- ~~Identify access to a member from a context that is fobidden by corresponding access modifier.~~
+- ~~Recognize valid and invalid uses of static imports.~~
+- ~~Identify illegal calls to static / instance methods.~~
+- ~~Evaluate initialization code + constructors.~~
+- ~~Recognize when a class is properly encapsulated.~~
 - Write simple predicates with lambda expressions.
