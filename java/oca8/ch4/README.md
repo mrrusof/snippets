@@ -1041,16 +1041,147 @@ Syntax with optional parts
 (Car c) -> { return c.isBrandNew(); }
 ```
 
-*TODO* examples of valid lambdas.
-
 ## What variables can my lambda access?
 
-*TODO* investigate list
+Local variables referenced from a lambda expression must be final or
+effectively final, for example.
+
+```java
+interface CheckString {
+  boolean test(String s);
+}
+
+class LocalVarsInLambdas {
+  static void print(List<String> l, CheckString c) {
+    for(String s : l)
+      if(c.test(s))
+        System.out.print(s + " ");
+    System.out.println();
+  }
+  public static void main(String... a) {
+    List<String> l = new ArrayList<String>();
+    l.add("one");
+    l.add("two");
+    l.add("three");
+    String one = "one";
+    CheckString c = s -> s == one;
+
+    print(l, c); // this works
+
+    // the following does not work
+    // one = "uno"; // compile error because we assigned one again
+    // print(l, c);
+  }
+}
+```
+
+Static variables occurring in a lambda may be reassigned, for example:
+
+```java
+class StaticVarsInLambdas {
+    static void print(List<String> l, CheckString c) {
+        for(String s : l)
+            if(c.test(s))
+                System.out.print(s + " ");
+        System.out.println();
+    }
+    static String one = "one";
+    public static void main(String... a) {
+        List<String> l = new ArrayList<String>();
+        l.add("one");
+        l.add("two");
+        l.add("three");
+        CheckString c = s -> s == one;
+        print(l, c); // this works and prints "one"
+        one = "two";
+        print(l, c); // this works and prints "two"
+    }
+}
+```
+
+Instance variables occurring in lambda expressions may be
+reassigned. References ocurring in lambda expressions may not be
+reassigned.
+
+```java
+class InstanceVarsInLambdas {
+    static void print(List<String> l, CheckString c) {
+        for(String s : l)
+            if(c.test(s))
+                System.out.print(s + " ");
+        System.out.println();
+    }
+    String str = "one";
+    public static void main(String... a) {
+        List<String> l = new ArrayList<String>();
+        l.add("one");
+        l.add("two");
+        l.add("three");
+        InstanceVarsInLambdas i = new InstanceVarsInLambdas();
+        CheckString c = s -> s == i.str;
+        print(l, c); // prints "one"
+        i.str = "two";
+        print(l, c); // prints "two"
+
+        // does not work
+        //i = null;
+        //print(l, c);
+
+        // with or without `i = null;`, this does not work
+        //i = new InstanceVarsInLambdas();
+        //print(l, c);
+
+        // with or without previous two cases, this does not work
+        //InstanceVarsInLambdas j = i;
+        //i = j;
+        //print(l, c);
+    }
+}
+```
 
 ## Predicates and functional interfaces
 
-An interface with a single boolean method is a _functional interface_.
-A predicate written as lambda expression corresponds to a functional interface.
+An interface with a single boolean method is a _functional interface_,
+for example:
+
+```java
+interface CheckString {
+    boolean test(String a);
+}
+
+interface CheckStrings {
+    boolean test(String a, String b);
+}
+```
+
+
+A predicate written as lambda expression corresponds to a functional
+interface, for example:
+
+```java
+public class Main {
+
+    static void print(List<String> l, String prev, CheckStrings c) {
+        for(String s : l) {
+            if(c.test(s, prev))
+                System.out.print(s + " ");
+            prev = s;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] a) {
+        List<String> l = new ArrayList<String>();
+        l.add("one");
+        l.add("two");
+        l.add("three");
+
+        // following predicate corresponds to interface CheckStrings
+        print(l, "zero", (s1, s2) -> s1.charAt(0) == s2.charAt(0));
+    }
+}
+```
+
 Don't declare your own functional interface, use interface `java.util.function.Predicate<T>`.
 
 *TODO* example
