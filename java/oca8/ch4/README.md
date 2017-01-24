@@ -702,6 +702,18 @@ Declaration meets the following two conditions.
 1. The method name is the name of the class.
 2. There is no return type.
 
+Examples:
+
+```java
+public class Car { } // class is given default constructor
+public class Car { public car() { } } // not a constructor
+public class Car { public car(String brand) { } } // not a constructor
+public class Car { public Car() { } } // declares the default constructor
+public class Car { Car(String name) { }  } // package private constructor
+public class Car { private Car(int age) { }  } // private constructor
+public class Car { void Bird() {    } } // not a constructor
+```
+
 ### A class may expose no constructor
 
 Just declare any constructor and make it private, for example:
@@ -712,7 +724,23 @@ class WhatIsGoingOn {
 }
 ```
 
-## Overload constructor
+Always remember that a private constructor may be called within the
+class where it is declared, for example:
+
+```java
+class PrivateConstructor {
+    private static int count = 0;
+    private PrivateConstructor() {
+        count++;
+    }
+    public static void main(String... args) {
+        new PrivateConstructor();
+        System.out.println("PrivateConstructor.count = " + PrivateConstructor.count);
+    }
+}
+```
+
+### Overload constructor
 
 Declare two constructors with different type of parameters.
 
@@ -735,7 +763,7 @@ public class Main {
 }
 ```
 
-## Call a constructor from another
+### Call a constructor from another
 
 Call `this` with corresponding parameters on the first statement of the
 calling constructor.
@@ -772,7 +800,7 @@ class Car {
 }
 ```
 
-## Constructor chaining
+### Constructor chaining
 
 That's when for a given class there are several constructors such that
 one calls another that has one more parameter until getting to a
@@ -805,7 +833,6 @@ class ConstructorChaining {
     }
 }
 ```
-
 
 ## Final instance fields
 

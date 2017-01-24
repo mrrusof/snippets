@@ -17,6 +17,7 @@ public class Main {
     ConstructorChaining.main(args);
     QuadPrismHeight2.main(args);
     Rectangle.main(args);
+    PrivateConstructor.main(args);
   }
 
     // public static void main(String... args) {
@@ -127,5 +128,16 @@ class Rectangle {
         // comment declaration of final instance field area
         // to print "Rectangle 'null', dimensions 2x3"
         System.out.println(new Rectangle(2,3));
+    }
+}
+
+class PrivateConstructor {
+    private static int count = 0;
+    private PrivateConstructor() {
+        count++;
+    }
+    public static void main(String... args) {
+        new PrivateConstructor();
+        System.out.println("PrivateConstructor.count = " + PrivateConstructor.count);
     }
 }
