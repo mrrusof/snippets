@@ -510,7 +510,7 @@ class Varargs {
 
 ### Autoboxing and overloading by varying primitive vs corresp. reference type
 
-A method that takes reference type that corresponds to a primite,
+A method that takes reference type that corresponds to a primitive
 works fine with corresponding primitive, for example:
 
 ```java
@@ -582,15 +582,14 @@ The rule also applies when you vary primitive types, for example:
 
 ```java
 public class Main {
-  static void m(byte n) {
-      System.out.println("byte");
+  static void m(short n) {
+      System.out.println("short");
   }
   static void m(int n) {
       System.out.println("int");
   }
   public static void main(String... args) {
-    m((byte) 1); // prints "byte"
-    m((short) 1); // prints "int"
+    m((byte) 1); // prints "short"
   }
 }
 ```
@@ -1184,11 +1183,41 @@ public class Main {
 
 Don't declare your own functional interface, use interface `java.util.function.Predicate<T>`.
 
-*TODO* example
+```java
+public class Predicates {
+    static void print(List<String> l, Predicate<String> p) {
+        out.print("print: ");
+        for(String s : l)
+            if(p.test(s))
+                out.print(s + " ");
+        out.println();
+    }
+    public static void main(String[] aa) {
+        List<String> l = Arrays.asList("one", "two", "three");
+        print(l, s -> s == "one" || s == "two"); // prints "print: one two"
+    }
+}
+```
 
 ## (Array)List's `removeIf` method
 
-*TODO* example of `removeIf`.
+```java
+public class Predicates {
+    static void print(List<String> l, Predicate<String> p) {
+        out.print("print: ");
+        for(String s : l)
+            if(p.test(s))
+                out.print(s + " ");
+        out.println();
+    }
+    public static void main(String[] aa) {
+        List<String> m = new ArrayList<>();
+        m.addAll(Arrays.asList("one", "two", "three"));
+        m.removeIf(s -> s == "one");
+        out.println(m); // prints "[two, three]"
+    }
+}
+```
 
 ## Practice this
 

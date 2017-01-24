@@ -21,6 +21,8 @@ public class Main {
         m(b + b);
 
         Varargs.m("one", "two");
+
+        Primitives.main(args);
     }
 }
 
@@ -28,7 +30,20 @@ class Varargs {
     public static void m(String... a) {
         out.println(Arrays.toString(a));
     }
-    public static void m(String[] a) { // cannot declare both m(String[]) and m(String...) in Varargs
-        out.println(Arrays.toString(a));
+    // public static void m(String[] a) { // cannot declare both m(String[]) and m(String...) in Varargs
+    //     out.println(Arrays.toString(a));
+    // }
+}
+
+
+class Primitives {
+    static void m(short n) {
+        System.out.println("short");
+    }
+    static void m(int n) {
+        System.out.println("int");
+    }
+    static void main(String... args) {
+        m((byte) 1); // prints "short"
     }
 }

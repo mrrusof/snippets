@@ -13,6 +13,8 @@ public class Main {
         StaticVarsInLambdas.main(args);
         out.println("**************************************************");
         InstanceVarsInLambdas.main(args);
+        out.println("**************************************************");
+        Predicates.main(args);
     }
 }
 
