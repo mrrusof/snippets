@@ -1,5 +1,16 @@
 # Chapter 4
 
+** Objectives **
+
+- Understand method declarations.
+- Understand access modifiers.
+- Understand static members and initializers.
+- Understand constructors.
+- Understand overloading.
+- Understand encapsulation.
+- Understand parameter passing.
+- Understand lambda expressions.
+
 ## TODO
 
 - What are the rules for assignment of primitive types?
