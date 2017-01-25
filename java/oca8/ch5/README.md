@@ -149,3 +149,47 @@ class Main {
   }
 }
 ```
+
+## Access to inherited members
+
+A class that extends another may use public and protected members. For example:
+
+```java
+// file pkg1.Car.java
+
+package pkg1;
+
+public class Car {
+  private static int count = 0;
+  private String brand;
+  private int id;
+
+  public Car(String brand) {
+    this.brand = brand;
+    id = count++;
+  }
+
+  public String getBrand() {
+    return brand;
+  }
+
+  protected int getId() {
+    return id;
+  }
+}
+
+// file pkg2.RacingCar.java
+
+package pkg2;
+
+import pkg1.Car;
+
+public class RacingCar extends Car {
+  public RacingCar(String brand) {
+    super(brand);
+  }
+  public String getRacingNumber() {
+    return getBrand() + " " + getId();
+  }  
+}
+```
