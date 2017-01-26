@@ -1,6 +1,6 @@
 # Chapter 5
 
-** Objectives **
+**Objectives**
 
 - Describe inheritance and its benefits (w00t).
 - Develop code that demonstrates the use of polymorphism, including overriding and object type versus reference type.
@@ -193,3 +193,111 @@ public class RacingCar extends Car {
   }  
 }
 ```
+
+You may access an inherited member via keywords `this` or `super`, for example:
+
+```java
+package pkg2b;
+
+import pkg1.Car;
+
+public class RacingCar extends Car {
+  public RacingCar(String brand) {
+    super(brand);
+  }
+  public String getRacingNumber() {
+    return this.getBrand() + " " + super.getId();
+  }
+}
+```
+
+## Override a method
+
+You override a method in a subclass by declaring another method that satisfies the following conditions.
+
+1. The method must have the same signature (method name and parameter type list).
+2. The method must be at least as accessible as the overriden method.
+3. If the method is throws any exception, each exception must be at covariant.
+4. If the method returns a value, the return type must be covariant.
+
+Consider the following example for the first two conditions.
+
+```java
+// file pkg2c.RacingCar;
+
+import pkg1.Car;
+
+public class RacingCar extends Car {
+  public RacingCar(String brand) {
+    super(brand);
+  }
+  public int getId() {
+    return super.getId() + 100;
+  }
+  public String getRacingNumber() {
+    return getBrand() + " " + getId();
+  }
+}
+```
+
+The use of `super` in method `RacingCar#getId()` is necessary. Had we not used `super`, calls to the method would recurse and cause **stack overflow**.
+
+For the third and fourth conditions, consider the following example.
+
+```java
+class Car {
+
+    private List<String> drivers;
+
+    public Car(List<String> drivers) {
+        this.drivers = drivers;
+    }
+
+    public List<String> getDrivers() throws Exception {
+        if(drivers.size() == 0)
+            throw new Exception("not enough drivers");
+        return drivers;
+    }
+}
+
+class RacingCar extends Car {
+
+    public RacingCar(ArrayList<String> l) {
+        super(l);
+    }
+
+    public ArrayList<String> getDrivers() throws RuntimeException {
+        try {
+            return (ArrayList<String>)super.getDrivers();
+        } catch(Exception e) {
+            throw new RuntimeException("parent had exception");
+        }
+    }
+}
+```
+
+For the third rule, we may remove all exceptions from the overriding method `getDrivers()`.
+
+```java
+class RacingCarNoEx extends Car {
+
+    public RacingCarNoEx(ArrayList<String> l) {
+        super(l);
+    }
+
+    public ArrayList<String> getDrivers() {
+        try {
+            return (ArrayList<String>)super.getDrivers();
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+}
+```
+
+
+
+## Study
+
+- The 4 conditions for overriding
