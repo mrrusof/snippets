@@ -7,7 +7,11 @@ public class Main {
         ArrayList<String> l = new ArrayList<>(Arrays.asList("A", "B"));
         System.out.println(new RacingCar(l).getDrivers());
         System.out.println(new RacingCarNoEx(new ArrayList<String>()).getDrivers());
-        System.out.println(new RacingCar(new ArrayList<String>()).getDrivers());
+        try {
+            System.out.println(new RacingCar(new ArrayList<String>()).getDrivers());
+        } catch(Exception e) {
+            System.out.println(e);
+        }
     }
 }
 

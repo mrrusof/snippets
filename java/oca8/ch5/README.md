@@ -3,7 +3,8 @@
 **Objectives**
 
 - Describe inheritance and its benefits (w00t).
-- Develop code that demonstrates the use of polymorphism, including overriding and object type versus reference type.
+- Develop code that demonstrates the use of polymorphism, including
+  overriding and object type versus reference type.
   - Understand what polymorphism is.
 - Determine when casting is necessary.
 - Use super and this to access objects and constructors.
@@ -11,8 +12,10 @@
 
 ## Inheritance
 
-Inheritance or subclassing is the process by which a child class automatically includes public and protected members from the corresponding parent.
-Other members are also included but may not be accessible to the child class.
+Inheritance or subclassing is the process by which a child class
+automatically includes public and protected members from the
+corresponding parent.  Other members are also included but may not be
+accessible to the child class.
 
 Java supports single inheritance but classes may implement several interfaces.
 
@@ -38,8 +41,9 @@ final class FormulaOneCar extends RaceCar { }
 
 ## Public access modifier applied to classes
 
-There may be only one public class in a given file and the file name must be that of the public class.
-The corresponding rule applies to interfaces.
+There may be only one public class in a given file and the file name
+must be that of the public class.  The corresponding rule applies to
+interfaces.
 
 ## When you don't indicate a superclass, your class extends java.lang.Object
 
@@ -49,7 +53,8 @@ Consider the following code.
 public class Car { }
 ```
 
-The semantics of that class is the same as the semantics of the following.
+The semantics of that class is the same as the semantics of the
+following.
 
 ```java
 public class Car extends java.lang.Object { }
@@ -57,7 +62,8 @@ public class Car extends java.lang.Object { }
 
 ## Use of `super()`
 
-You may only call `super(...)` in the first location of the body of any given constructor, for example:
+You may only call `super(...)` in the first location of the body of
+any given constructor, for example:
 
 ```java
 class Car {
@@ -76,7 +82,9 @@ class RacingCar extends Car {
 
 ## Default call to `super()`
 
-If a given constructor does not call any version of `super(...)` or `this(...)`, Java will call `super()` by default. Consider the following example.
+If a given constructor does not call any version of `super(...)` or
+`this(...)`, Java will call `super()` by default. Consider the
+following example.
 
 ```java
 class Car {
@@ -98,8 +106,9 @@ class Car {
 7: }
 ```
 
-Given that constructor `Car()` is called in line 3 and there is no such constructor in class `Car`, the code does not compile.
-A way to remove the compile error is to declare constructor `Car()` as follows.
+Given that constructor `Car()` is called in line 3 and there is no
+such constructor in class `Car`, the code does not compile.  A way to
+remove the compile error is to declare constructor `Car()` as follows.
 
 ```java
 class Car {
@@ -128,7 +137,8 @@ Another way is to call a constructor of your choice, for example:
 
 ## Constructors are not inherited
 
-For example, the following will not compile because there is no constructor `RacingCar(String)`.
+For example, the following will not compile because there is no
+constructor `RacingCar(String)`.
 
 ```java
 class Car {
@@ -152,7 +162,8 @@ class Main {
 
 ## Access to inherited members
 
-A class that extends another may use public and protected members. For example:
+A class that extends another may use public and protected members. For
+example:
 
 ```java
 // file pkg1.Car.java
@@ -194,7 +205,8 @@ public class RacingCar extends Car {
 }
 ```
 
-You may access an inherited member via keywords `this` or `super`, for example:
+You may access an inherited member via keywords `this` or `super`, for
+example:
 
 ```java
 package pkg2b;
@@ -211,14 +223,19 @@ public class RacingCar extends Car {
 }
 ```
 
-## Override a method
+## Overriding methods
 
-You override a method in a subclass by declaring another method that satisfies the following conditions.
+Given an instance method in a class, you override the method in a
+subclass by declaring another method that satisfies the following
+conditions.
 
-1. The method must have the same signature (method name and parameter type list).
-2. The method must be at least as accessible as the overriden method.
-3. If the method is throws any exception, each exception must be at covariant.
+1. The method must have the same signature (method name and parameter
+   type list).
+2. The method must be at least as accessible as the overridden method.
+3. If the method throws any exception, each exception must be
+   covariant.
 4. If the method returns a value, the return type must be covariant.
+5. The method is an instance method.
 
 Consider the following example for the first two conditions.
 
@@ -240,7 +257,9 @@ public class RacingCar extends Car {
 }
 ```
 
-The use of `super` in method `RacingCar#getId()` is necessary. Had we not used `super`, calls to the method would recurse and cause **stack overflow**.
+The use of `super` in method `RacingCar#getId()` is necessary. Had we
+not used `super`, calls to the method would recurse and cause **stack
+overflow**.
 
 For the third and fourth conditions, consider the following example.
 
@@ -276,7 +295,8 @@ class RacingCar extends Car {
 }
 ```
 
-For the third rule, we may remove all exceptions from the overriding method `getDrivers()`.
+For the third rule, we may remove all exceptions from the overriding
+method `getDrivers()`.
 
 ```java
 class RacingCarNoEx extends Car {
@@ -296,8 +316,184 @@ class RacingCarNoEx extends Car {
 }
 ```
 
+## Redeclaring private methods
 
+When a subclass declares a method that has the same name as a private
+method in a superclass, neither the rules for overriding nor the rules
+for overloading apply.  For example:
+
+```java
+public class Camel {
+  private String getNumberOfHumps() {
+    return null;
+  }
+}
+
+public class BactrianCamel extends Camel {
+  public int getNumberOfHumps() {
+    return 2;
+  }
+  public BactrianCamel() {
+    System.out.println(getNumberOfHumps()); // prints "2"
+  }
+}
+```
+
+## Hiding methods
+
+Given a class method in a class, you hide the method in a subclass by
+declaring another method that satisfies the following conditions.
+
+1. The method must have the same signature (method name and parameter
+   type list).
+2. The method must be at least as accessible as the overridden method.
+3. If the method throws any exception, each exception must be
+   covariant.
+4. If the method returns a value, the return type must be covariant.
+5. The method is a class method.
+
+For example:
+
+```java
+class Car {
+    public static String getClassName() {
+        return "Car";
+    }
+}
+
+class RacingCar extends Car {
+    public static String getClassName() {
+        return "RacingCar";
+    }
+    public static void main(String[] aa) {
+        System.out.println(RacingCar.getClassName()); // prints "RacingCar"
+    }
+}
+```
+
+You may use `super` in an instance context to call the hidden
+method. You may not use non-static variable `super` from a static
+context to call the hidden method. For example:
+
+```java
+class RacingCar extends Car {
+    public static String getClassName() {
+        // *** non-static variable super cannot be referenced from a static context
+        //return super.getClassName() + " RacingCar";
+        return "RacingCar";
+    }
+    public String toString() {
+        return getClassName() + " (parent " + super.getClassName() + ")";
+    }
+    public static void main(String[] aa) {
+        System.out.println(new RacingCar()); // prints "RacingCar (parent Car)"
+    }
+}
+```
+
+## Inherited code calls overriding methods but not hidding methods
+
+In inherited code, a given call to a method that is overrided executes
+the overriding method.  In inherited code, a given call to a method
+that is hidden executes the hidden method. For example:
+
+```java
+class Car {
+  public static float getMaxKmH() {
+    return 100;
+  }
+  public String getBrand() {
+    return "Volkswagen";
+  }
+  public String toString() {
+    return getBrand() + " w/ max speed of " + getMaxKmH + " km/h";
+  }
+}
+
+class RacingCar extends Car {
+  public static float getMaxKmH() {
+    return 350;
+  }
+  public String getBrand() {
+    return "Alfa Romeo";
+  }
+  public static void main(String[] args) {
+    System.out.println(new Car()); // prints "Volkswagen w/ max speed of 100.0 km/h" as expected
+    System.out.println(new RacingCar()); // prints "Alfa Romeo w/ max speed of 100.0 km/h"
+  }
+}
+```
+
+## Keyword `final` prevents overriding and hiding
+
+For example:
+
+```java
+class Car {
+    public static final float getMaxKmH() {
+        return 100;
+    }
+    public final String getBrand() {
+        return "Volkswagen";
+    }
+}
+
+class RacingCar extends Car {
+    public static float getMaxKmH() { // compile error, cannot hide getMaxKmH()
+        return 350;
+    }
+    public String getBrand() { // compile error, cannot override getBrand()
+        return "Alfa Romeo";
+    }
+}
+```
+
+## Hiding variables
+
+Given an instance or class variable in a class, you hide the variable
+by declaring a variable that satisfies the following conditions.
+
+1. The variable has the same name.
+
+In inherited code, access to the hidden variable references the hidden
+variable.
+
+**For instance and class variables, there is no feature that corresponds
+to method overriding.**
+
+From an instance context, you may use `super` to access a
+hidden variable, be it static or instance.
+
+For example:
+
+```java
+class Car {
+    public static int instanceCount = 0;
+    private String brand = "Volkswagen";
+    public String toString() {
+        return "Car " + brand + "-" + instanceCount;
+    }
+}
+
+class RacingCar extends Car {
+    private long instanceCount = 1;
+    public static StringBuilder brand = new StringBuilder("Alfa Romeo");
+    public String toString() {
+        return "RacingCar " + brand + "-" + instanceCount + " (parent brand " + super.brand + " and parent count " + super.instanceCount + ")";
+    }
+    public static void main(String[] args) {
+        // prints "Car Volkswagen-0"
+        System.out.println(new Car());
+        // prints "RacingCar Alfa Romeo-1 (parent brand Volkswagen and parent count 0)"
+        System.out.println(new RacingCar());
+        // *** non-static variable instanceCount cannot be referenced from a static context
+        //System.out.println("instanceCount = " + instanceCount);
+    }
+}
+```
 
 ## Study
 
-- The 4 conditions for overriding
+- The 5 conditions for overriding
+- The 5 conditions for hiding
+- What method is called when method is overriden / hidden.
