@@ -492,8 +492,96 @@ class RacingCar extends Car {
 }
 ```
 
+## Abstract methods and classes
+
+The declaration of each abstract method ends with a semicolon.
+
+```java
+abstract class Worker {
+
+    private String name;
+
+    public Worker(String name) {
+        this.name = name;
+    }
+
+    protected abstract void task(); // THIS ONE HERE
+
+    public void work() {
+        System.out.println(LocalDateTime.now() + " BEGIN " + name);
+        task();
+        System.out.println(LocalDateTime.now() + " END " + name);
+    }
+}
+```
+
+Remember that keyword `abstract` may precede any access modifier.
+
+```java
+abstract class Worker {
+...
+    abstract protected void task(); // THIS ALSO WORKS
+...
+}
+```
+
+A given abstract method may only be declared in an abstract class.
+
+```java
+class Worker {
+...
+    protected abstract void task(); // DOES NOT COMPILE
+...
+}
+```
+
+A method or class may not be abstract and final.
+
+```java
+class Worker {
+...
+    // following line gives "error: illegal combination of modifiers: abstract and final"
+    protected final abstract void task();
+...
+}
+```
+
+A method may not be abstract and private.
+
+```java
+class Worker {
+...
+    // the following line gives "error: illegal combination of modifiers: abstract and private"
+    private abstract void task();
+...
+}
+```
+
+The implementation of an abstact method may only be at least as
+accessible as the abstract method.
+
+TODO: example
+
+Do the rules for overriding apply to the implementation of an abstract method?
+
+TODO: example
+
+Given an abstract class and an abstract subclass, the subclass may not
+provide any implementation for the abstract methods.
+
+TODO: example
+
+Given an abtract class and a concrete subclass, the subclass must
+implement all abstract methods.
+
+TODO: example of two abstract classes and one concrete class
+TODO: example where one of the abstract methods is implemented by the
+      second abstract class
+
+
 ## Study
 
 - The 5 conditions for overriding
 - The 5 conditions for hiding
 - What method is called when method is overriden / hidden.
+- What variable is accessed when variable is hidden.
