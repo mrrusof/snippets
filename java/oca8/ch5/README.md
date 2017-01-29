@@ -232,9 +232,9 @@ conditions.
 1. The method must have the same signature (method name and parameter
    type list).
 2. The method must be at least as accessible as the overridden method.
-3. If the method throws any exception, each exception must be
-   covariant.
-4. If the method returns a value, the return type must be covariant.
+3. Each exception must be covariant wrt. some exception thrown by the
+   overriden method.
+4. The return type must be covariant.
 5. The method is an instance method.
 
 Consider the following example for the first two conditions.
@@ -285,7 +285,7 @@ class RacingCar extends Car {
         super(l);
     }
 
-    public ArrayList<String> getDrivers() throws RuntimeException {
+    public ArrayList<String> getDrivers() throws RuntimeException, Exception {
         try {
             return (ArrayList<String>)super.getDrivers();
         } catch(Exception e) {
@@ -346,10 +346,10 @@ declaring another method that satisfies the following conditions.
 
 1. The method must have the same signature (method name and parameter
    type list).
-2. The method must be at least as accessible as the overridden method.
-3. If the method throws any exception, each exception must be
-   covariant.
-4. If the method returns a value, the return type must be covariant.
+2. The method must be at least as accessible as the hidden method.
+3. Each exception must be covariant wrt. some exception thrown by the
+   hidden method.
+4. The return type must be covariant.
 5. The method is a class method.
 
 For example:
@@ -492,7 +492,7 @@ class RacingCar extends Car {
 }
 ```
 
-## Abstract methods and classes
+## Declaration of abstract classes and methods
 
 The declaration of each abstract method ends with a semicolon.
 
@@ -557,14 +557,75 @@ class Worker {
 }
 ```
 
-The implementation of an abstact method may only be at least as
-accessible as the abstract method.
+## Implementation of abstract methods
 
-TODO: example
+The first 4 rules for overriding methods apply to the implementation
+of an abstract method. Consider the following abstract class.
 
-Do the rules for overriding apply to the implementation of an abstract method?
+```java
+abstract class Printer {
+    abstract protected String document() throws TimeoutException;
 
-TODO: example
+    public void print() {
+        try {
+            System.out.println("printed document: " + document());
+        } catch(TimeoutException e) {
+            System.out.println("the document took too long to render");
+        }
+    }
+}
+```
+
+1. The method must have the same signature (method name and parameter
+   type list). For example, the following declaration does not override
+   abstract method `document` and thus fails to compile.
+
+   ```java
+   class NumberPrinter extends Printer {
+     protected String document(int n) {
+       return n + "";
+     }
+   }
+   ```
+
+2. The method must be at least as accessible as the abstract
+   method. For example, the following declaration attempts to
+   assign weaker access privileges and thus fails to compile.
+
+   ```java
+   class NumberPrinter extends Printer {
+     private int document() {
+         return 1;
+     }
+   }
+   ```
+
+3. Each exception must be covariant wrt. some exception thrown
+   by the abstract method. For example, the following method
+   fails to compile because abstract method does not throw
+   Exception.
+
+   ```java
+   class NumberPrinter extends Printer {
+     protected String document() throws Exception {
+         throw new Exception("w00t");
+     }
+   }
+   ```
+
+4. The return type must be covariant. For example, the
+   following method fails to compile because return type
+   StringBuilder is not a subtype of String.
+
+   ```java
+   class NumberPrinter extends Printer {
+     protected StringBuilder document() {
+         return new StringBuilder("1");
+     }
+   }
+   ```
+
+## Something something
 
 Given an abstract class and an abstract subclass, the subclass may not
 provide any implementation for the abstract methods.
