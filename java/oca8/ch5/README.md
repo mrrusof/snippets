@@ -727,8 +727,6 @@ TODO
 
 ## Interfaces
 
-Declaration syntax.
-
 ```java
    public abstract interface Printer {
 // ------ --------
@@ -749,6 +747,8 @@ Declaration syntax.
 
 }
 ```
+
+
 
 The rules that govern interfaces are the following.
 
