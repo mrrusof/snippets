@@ -538,7 +538,7 @@ class Worker {
 A method or class may not be abstract and final.
 
 ```java
-class Worker {
+abstract class Worker {
 ...
     // following line gives "error: illegal combination of modifiers: abstract and final"
     protected final abstract void task();
@@ -549,7 +549,7 @@ class Worker {
 A method may not be abstract and private.
 
 ```java
-class Worker {
+abstract class Worker {
 ...
     // the following line gives "error: illegal combination of modifiers: abstract and private"
     private abstract void task();
@@ -557,10 +557,35 @@ class Worker {
 }
 ```
 
+An abstract class may not be `protected`. The rule does not apply to
+methods.
+
+```java
+protected abstract class Worker { } // DOES NOT COMPILE
+```
+
+The rules that govern abstract classes are the following.
+
+1. Abstract classes cannot be instantiated.
+2. Abstract classes may or may not include abstract or nonabstract methods.
+3. Abstract classses may not be `private`, `protected`, or `final`.
+4. An abstract class that extends another class inherits all of its
+   methods. See following sections.
+5. Every concrete class must implement all of the inherited abstract
+   methods. See following sections.
+
+The rules that govern abstract methods are the following.
+
+1. Abstract methods may only be defined in abstract classes.
+2. Abstract methods may not be `private` or `final`.
+3. Abstract methods must not provide an implementation.
+4. The first 4 rules for overriding methods apply to the
+   implementation of abstract methods.
+
 ## Implementation of abstract methods
 
 The first 4 rules for overriding methods apply to the implementation
-of an abstract method. Consider the following abstract class.
+of abstract methods. Consider the following abstract class.
 
 ```java
 abstract class Printer {
@@ -625,20 +650,126 @@ abstract class Printer {
    }
    ```
 
-## Something something
+## Concrete class
 
-Given an abstract class and an abstract subclass, the subclass may not
-provide any implementation for the abstract methods.
+A concrete class is a nonabstract class that extends an abstract
+class. A given concrete class must implement all abstract methods
+inherited. For example, class `NumberPrinter` is a concrete class.
 
-TODO: example
+```java
+abstract class Printer {
+  protected abstract String document();
 
-Given an abtract class and a concrete subclass, the subclass must
-implement all abstract methods.
+  public void print() {
+    System.out.println("printed document: " + document());
+  }
+}
 
-TODO: example of two abstract classes and one concrete class
-TODO: example where one of the abstract methods is implemented by the
-      second abstract class
+abstract class TimestampedPrinter extends Printer {
+  public void print() {
+    System.out.println("current date and time: " + LocalDateTime.now());
+    super.print();
+  }
+}
 
+class NumberPrinter extends TimestampedPrinter { // CONCRETE CLASS
+  protected String n;
+  public NumberPrinter(int n) {
+    this.n = n + "";
+  }
+  protected String document() {
+    return n;
+  }
+}
+```
+
+## An abstract class may extend another abstract class
+
+The example in the previous section shows this case.
+
+## An abstract class may even extend a nonabstract class
+
+In this case, the child class may or may not implement any of the
+abstract methods given by the parent, for example:
+
+```java
+class BlankPrinter {
+  protected String document() {
+    return "";
+  }
+
+  public void print() {
+    System.out.println("printed document: " + document());
+  }
+}
+
+abstract class HeaderPrinter extends BlankPrinter {
+  protected abstract String header();
+  public void print() {
+    System.out.println("header of document: " + header());
+    super.print();
+  }
+}
+
+class HelloPrinter extends HeaderPrinter {
+  protected String header() {
+    return LocalDateTime.now() + "";
+  }
+  protected String document() {
+    return "hello";
+  }
+}
+```
+
+## Can an abstract class prescribe fields?
+
+TODO
+
+## Interfaces
+
+Declaration syntax.
+
+```java
+   public abstract interface Printer {
+// ------ --------
+//   |       |
+// public  implicit
+//   or
+// default
+
+   public static final int DEFAULT_PAPER_SIZE = "A4";
+// -------------------
+//          |
+//       implicit  
+
+   public abstract void document();
+// ---------------
+//        |
+//     implicit
+
+}
+```
+
+The rules that govern interfaces are the following.
+
+1. Interfaces cannot be instatiated directly.
+
+2. An interface is not required to have any methods.
+
+3. An interface may not be marked as final.
+
+4. For each top-level interface, the interface is either `public` or
+   have default access.
+
+5. The interface is `abstract` regardless of whether you apply the
+   keyword `abstract` or not.
+
+6. A method may in a given interface may not be `private`, `protected`
+   or `final`.
+
+7. All nondefault methods in a given interface are given modifiers
+`abstract` and `public`. (TODO: what about those that are default?)
+   
 
 ## Study
 

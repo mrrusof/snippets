@@ -6,6 +6,8 @@ public class Main {
     public static void main(String[] aa) {
         new CountingWorker("w1").work();
         new NumberPrinter().print();
+        new TNumberPrinter(1).print();
+        new HelloPrinter().print();
     }
 }
 
@@ -71,6 +73,10 @@ class MyTimeoutException extends TimeoutException {}
 
 class NumberPrinter extends Printer {
 
+    protected String document() {
+        return "1";
+    }
+
     // 1. The method must have the same signature (method name and
     //    parameter type list). For example, the following declaration
     //    does not override abtract method `document` and thus fails
@@ -111,3 +117,50 @@ class NumberPrinter extends Printer {
     //     return new StringBuilder("1");
     // }
 }
+
+abstract class TimestampedPrinter extends Printer {
+  public void print() {
+    System.out.println("current date and time: " + LocalDateTime.now());
+    super.print();
+  }
+}
+
+class TNumberPrinter extends TimestampedPrinter { // CONCRETE CLASS
+  protected String n;
+  public TNumberPrinter(int n) {
+    this.n = n + "";
+  }
+  protected String document() {
+    return n;
+  }
+}
+
+class BlankPrinter {
+  protected String document() {
+    return "";
+  }
+
+  public void print() {
+    System.out.println("printed document: " + document());
+  }
+}
+
+abstract class HeaderPrinter extends BlankPrinter {
+  protected abstract String header();
+  public void print() {
+    System.out.println("header of document: " + header());
+    super.print();
+  }
+}
+
+class HelloPrinter extends HeaderPrinter {
+  protected String header() {
+    return LocalDateTime.now() + "";
+  }
+  protected String document() {
+    return "hello";
+  }
+}
+
+//// modifier protected not allowed here
+//protected abstract class BadWorker { }
