@@ -689,8 +689,7 @@ The example in the previous section shows this case.
 
 ## An abstract class may even extend a nonabstract class
 
-In this case, the child class may or may not implement any of the
-abstract methods given by the parent, for example:
+For example:
 
 ```java
 class BlankPrinter {
@@ -735,12 +734,12 @@ TODO
 //   or
 // default
 
-   public static final int DEFAULT_PAPER_SIZE = "A4";
+   public static final String DEFAULT_PAPER_SIZE = "A4";
 // -------------------
 //          |
 //       implicit  
 
-   public abstract void document();
+   public abstract void print();
 // ---------------
 //        |
 //     implicit
@@ -748,7 +747,34 @@ TODO
 }
 ```
 
+The implicit parts are given by Java when you don't write them.
+For example, the implementation of method `print()` in the following
+code must be public so that the code compiles.
 
+```java
+interace Printer {
+  // private String DEFAULT_PAPER_SIZE = "A4"; // FAILS WITH "error: modifier private not allowed here"
+  String DEFAULT_PAPER_SIZE = "A4"
+  // private void print(); // FAILS WITH "error: modifier private not allowed here"
+  void print();
+}
+
+class NumberPrinter implements Printer {
+
+  // void print() { // FAILS WITH "attempting to assign weaker access privileges; was public"
+
+  public void print() {
+    System.out.println("paper_size: " + DEFAULT_PAPER_SIZE);
+    for(int i = 0; i < 10; i++)
+      System.out.println(i);
+  }
+}
+```
+
+No member of an interface may be private, as illustrated in the
+previous example.
+
+### Rules
 
 The rules that govern interfaces are the following.
 
@@ -758,18 +784,84 @@ The rules that govern interfaces are the following.
 
 3. An interface may not be marked as final.
 
-4. For each top-level interface, the interface is either `public` or
-   have default access.
+4. Each top-level interface is either `public` or
+   has default access.
 
-5. The interface is `abstract` regardless of whether you apply the
+5. An interface is `abstract` regardless of whether you apply the
    keyword `abstract` or not.
 
-6. A method may in a given interface may not be `private`, `protected`
-   or `final`.
+6. A method of an interface may not be `private`, `protected`
+   or `final` because all methods in a given interface are considered
+   `abstract` and `public`.
 
-7. All nondefault methods in a given interface are given modifiers
-`abstract` and `public`. (TODO: what about those that are default?)
-   
+7. A field is considered `public`, `final`, and `static`.
+
+Example.
+
+```java
+//interface Printer { // THIS AND THE FOLLOWING EVALUATE THE SAME
+abstract interface Printer {
+    // private String DEFAULT_PAPER_SIZE = "A4"; // FAILS WITH "error: modifier private not allowed here"
+
+    // public String DEFAULT_PAPER_SIZE = "A4"; // THIS AND THE FOLLOWING EVALUATE THE SAME
+    // static String DEFAULT_PAPER_SIZE = "A4"; // THIS AND THE FOLLOWING EVALUATE THE SAME
+    // final String DEFAULT_PAPER_SIZE = "A4"; // THIS AND THE FOLLOWING EVALUATE THE SAME
+    String DEFAULT_PAPER_SIZE = "A4";
+
+    // private void print(); // FAILS WITH "error: modifier private not allowed here"
+    // final void print(); // FAILS WITH "error: modifier final not allowed here"
+
+    // public abstract void print(); // THE FOLLOWING EVALUATE THE SAME
+    // public void print(); // THIS AND THE FOLLOWING EVALUATE THE SAME
+    // abstract void print(); // THIS AND THE FOLLOWING EVALUATE THE SAME
+    void print();
+}
+```
+
+## An interface may extend another
+
+The child inherits all abstract methods and any implementing class
+must implement all.
+
+```java
+interface Renderable {
+  String render();
+}
+
+interface Printable extends Renderable {
+  void print();
+}
+
+class PrintablePrinter implements Printable {
+  public String render() { return "document"; }
+  public void print() { System.out.println(render()); }
+}
+```
+
+## An abstract class may implement an interface
+
+```java
+interface Renderable {
+  String render();
+}
+
+abstract class Printer implements Renderable {
+  void print() { System.out.println(render()); }
+}
+
+class HelloPrinter extends Printer {
+  public String render() { return "hello"; }
+}
+```
+
+## One class may implement two interfaces that prescribe the same
+   method
+
+```java
+//TODO
+```
+
+
 
 ## Study
 
@@ -777,3 +869,4 @@ The rules that govern interfaces are the following.
 - The 5 conditions for hiding
 - What method is called when method is overriden / hidden.
 - What variable is accessed when variable is hidden.
+- The 7 rules that govern interfaces
