@@ -790,11 +790,13 @@ The rules that govern interfaces are the following.
 5. An interface is `abstract` regardless of whether you apply the
    keyword `abstract` or not.
 
-6. A method of an interface may not be `private`, `protected`
-   or `final` because all methods in a given interface are considered
-   `abstract` and `public`.
+6. A method of an interface may not be `private`, `protected`,
+   `final`, or `static` because all methods in a given interface are
+   considered `abstract` and `public`.
 
 7. A field is considered `public`, `final`, and `static`.
+
+8. A field must be set when declared.
 
 Example.
 
@@ -810,6 +812,7 @@ abstract interface Printer {
 
     // private void print(); // FAILS WITH "error: modifier private not allowed here"
     // final void print(); // FAILS WITH "error: modifier final not allowed here"
+    // static abstract void print(); // FAILS WITH "illegal combination of modifiers: abstract and static"
 
     // public abstract void print(); // THE FOLLOWING EVALUATE THE SAME
     // public void print(); // THIS AND THE FOLLOWING EVALUATE THE SAME
@@ -857,11 +860,167 @@ class HelloPrinter extends Printer {
 ## One class may implement two interfaces that prescribe the same
    method
 
+For example:
+
 ```java
-//TODO
+interface Document {
+  void print();
+}
+
+interface Printer {
+  void print();
+}
+
+class PrintNumber implements Document, Printer {
+  public void print() {
+    System.out.println(1);
+  }
+}
+```
+
+However, one class may not implement two interfaces that prescribe
+methods with the same signature and different return type.
+
+```java
+interface Document {
+  String print();
+}
+
+interface Printer {
+  void print();
+}
+
+class PrintNumber implements Document, Printer { // COMPILE ERROR "PrintNumber is not abstract and does not override abstract method print() in Printer"
+  public String print() { // COMPILE ERROR HERE
+    return "1";
+  }
+
+  public void print() { // COMPILE ERROR HERE
+    System.out.println(1);
+  }
+}
+```
+
+The same goes for abstract classes and interfaces.
+
+```java
+// ERROR "types Printer5 and Document5 are incompatible; both define print(), but with unrelated return types"
+abstract class PrintStuff implements Document5, Printer5 { }
+
+// ERROR "types Printer5 and Document5 are incompatible; both define print(), but with unrelated return types"
+interface IPrintStuff extends Document5, Printer5 { }
+```
+
+## Repeat: rules for interface variables
+
+The last two rules for interfaces govern interface fields and they are
+the following.
+
+1. Every field is considered `public`, `static`, and `final`.
+2. Every field must be set when declared.
+
+Rule 1 means that you make a field `private`, `protected` or `abstract`.
+
+```java
+interface Document {
+    private int DEFAULT_PAGE_COUNT = 1; // private conflicts with public
+    protected String DEFAULT_PAGE_SIZE = "A4"; // protected conflicts with public
+    abstract String DEFAULT_BODY = "hello"; // abstract conflicts with final
+}
+```
+
+Rule 1 also means that the following two interfaces have the same
+semantics.
+
+```java
+interface Document {
+  int DEFAULT_PAGE_COUNT = 1;
+}
+
+interface Document {
+  public static final int DEFAULT_PAGE_COUNT = 1;
+}
 ```
 
 
+## Default interface methods (introduced in Java 8)
+
+The purpose of a default method is to provide a default implementation
+that can be overriden. Thus, default methods cannot be static, final
+or abstract.
+
+With default methods you can write something very similar to abstract
+class from "Implementation of abstract methods". Difference is that
+you cannot make `document()` protected.
+
+```java
+interface Printer {
+  String document() throws TimeoutException;
+  default void print() {
+    try {
+      System.out.println("printed document: " + document());
+    } catch(TimeoutException e) {
+      System.out.println("the document took too long to render");
+    }
+  }
+}
+
+class NumberPrinter implements Printer {
+    public String document() {
+        return "1";
+    }
+    public static void main(String[] args) {
+        new NumberPrinter().print(); // "printed document: 1"
+    }
+}
+```
+
+### Rules
+
+1. A default method may only be declared in an interface.
+2. A default method indicates keyword `default`.
+3. A default method provides a body.
+4. A default method will not compile if made static, final, or
+   abstract.
+5. A default method is public and will not compile if marked
+   private or protected.
+
+For rule 4, consider the following example.
+
+```java
+interface Printer8 {
+    // *** illegal combination of modifiers: static and default
+    static default void print() {
+        System.out.println("hello");
+    }
+
+    // *** modifier final not allowed here
+    final default void print() {
+        System.out.println("hello");
+    }
+
+    // *** illegal combination of modifiers: abstract and default
+    abstract default void print() {
+        System.out.println("hello");
+    }
+}
+```
+
+For rule 5, consider the following example.
+
+```java
+interface Printer9 {
+    // *** modifier private not allowed here
+    private default void print() {
+        System.out.println("hello");
+    }
+
+    // *** modifier protected not allowed here
+    protected default void print() {
+        System.out.println("hello");
+    }
+}
+```
 
 ## Study
 
@@ -869,4 +1028,4 @@ class HelloPrinter extends Printer {
 - The 5 conditions for hiding
 - What method is called when method is overriden / hidden.
 - What variable is accessed when variable is hidden.
-- The 7 rules that govern interfaces
+- The 8 rules that govern interfaces
