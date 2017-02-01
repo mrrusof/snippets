@@ -982,8 +982,19 @@ class NumberPrinter implements Printer {
 3. A default method provides a body.
 4. A default method will not compile if made static, final, or
    abstract.
+   TODO: example
 5. A default method is public and will not compile if marked
    private or protected.
+   TODO: example
+6. An interface that extends another may override a default method
+   following the rules for overriding.
+   TODO: example
+7. An interface that extends another may hide a default method by
+   redeclaring it as abstract.
+   TODO: example
+8. Rules 6 and 7 apply to an abstract class that implements an
+   interface.
+   TODO: example
 
 For rule 4, consider the following example.
 
@@ -1022,10 +1033,26 @@ interface Printer9 {
 }
 ```
 
+## Recap: Rules 6, 7, 8
+
+An interface that extends another that defines a default method may
+take one of three actions.
+
+1. Inherit the default method.
+2. Override the default method with another default declaration (rule 6)
+3. Hide the default method with an abstract declaration (rule 7)
+
+TODO: rule 8
+
+## Multiple inheritance
+
+TODO: default methods
+TODO: interface fields
+
 ## Study
 
 - The 5 conditions for overriding
 - The 5 conditions for hiding
 - What method is called when method is overriden / hidden.
 - What variable is accessed when variable is hidden.
-- The 8 rules that govern interfaces
+- The 7 rules that govern interfaces
