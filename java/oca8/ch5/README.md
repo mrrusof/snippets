@@ -84,7 +84,7 @@ class RacingCar extends Car {
 
 If a given constructor does not call any version of `super(...)` or
 `this(...)`, Java will call `super()` by default. Consider the
-following example.
+following example that does not compile.
 
 ```java
 class Car {
@@ -99,8 +99,8 @@ class Car {
 
 1: class RacingCar extends Car {
 2:   public RacingCar() {
-3:     // A call to Car() will happen before
-4:     // executing the following line.
+3:     // A call to Car() will happen before executing the following line.
+4:     // That call breaks the program.
 5:     System.out.println("RacingCar() does nothing.");
 6:   }
 7: }
@@ -261,7 +261,9 @@ The use of `super` in method `RacingCar#getId()` is necessary. Had we
 not used `super`, calls to the method would recurse and cause **stack
 overflow**.
 
-For the third and fourth conditions, consider the following example.
+For the third and fourth conditions, consider the following example
+that compiles because each exception in the overriding method is
+covariant wrt. `Exception`.
 
 ```java
 class Car {
@@ -296,7 +298,7 @@ class RacingCar extends Car {
 ```
 
 For the third rule, we may remove all exceptions from the overriding
-method `getDrivers()`.
+method `getDrivers()` and still get a program that compiles.
 
 ```java
 class RacingCarNoEx extends Car {
@@ -320,7 +322,9 @@ class RacingCarNoEx extends Car {
 
 When a subclass declares a method that has the same name as a private
 method in a superclass, neither the rules for overriding nor the rules
-for overloading apply.  For example:
+for overloading apply.  For example, the following program compiles
+even if each declaration of `getNumberOfHumps` returns a different
+type.
 
 ```java
 public class Camel {

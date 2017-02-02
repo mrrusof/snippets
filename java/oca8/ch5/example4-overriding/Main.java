@@ -5,7 +5,11 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
         ArrayList<String> l = new ArrayList<>(Arrays.asList("A", "B"));
-        System.out.println(new RacingCar(l).getDrivers());
+        try {
+            System.out.println(new RacingCar(l).getDrivers());
+        } catch(Exception e) {
+            System.out.println("This statement is unreachable.");
+        }
         System.out.println(new RacingCarNoEx(new ArrayList<String>()).getDrivers());
         try {
             System.out.println(new RacingCar(new ArrayList<String>()).getDrivers());
@@ -36,7 +40,7 @@ class RacingCar extends Car {
         super(l);
     }
 
-    public ArrayList<String> getDrivers() throws RuntimeException {
+    public ArrayList<String> getDrivers() throws RuntimeException, Exception {
         try {
             return (ArrayList<String>)super.getDrivers();
         } catch(Exception e) {
