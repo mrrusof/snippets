@@ -201,7 +201,7 @@ public class RacingCar extends Car {
   }
   public String getRacingNumber() {
     return getBrand() + " " + getId();
-  }  
+  }
 }
 ```
 
@@ -737,7 +737,7 @@ TODO
    public static final String DEFAULT_PAPER_SIZE = "A4";
 // -------------------
 //          |
-//       implicit  
+//       implicit
 
    public abstract void print();
 // ---------------
@@ -778,6 +778,8 @@ previous example.
 
 The rules that govern interfaces are the following.
 
+TODO: review these rules.
+
 1. Interfaces cannot be instatiated directly.
 
 2. An interface is not required to have any methods.
@@ -790,9 +792,12 @@ The rules that govern interfaces are the following.
 5. An interface is `abstract` regardless of whether you apply the
    keyword `abstract` or not.
 
-6. A method of an interface may not be `private`, `protected`,
-   `final`, or `static` because all methods in a given interface are
-   considered `abstract` and `public`.
+6. Methods may be abstract, default or static.
+  1. Abstract methods are `public` and `abstract` and
+     therefore may not be `private`, `protected`,
+     `final`, or `static`.
+  2. Default methods are public ... TODO
+  3. Static methods are `public` ... TODO
 
 7. A field is considered `public`, `final`, and `static`.
 
@@ -857,60 +862,6 @@ class HelloPrinter extends Printer {
 }
 ```
 
-## One class may implement two interfaces that prescribe the same
-   method
-
-For example:
-
-```java
-interface Document {
-  void print();
-}
-
-interface Printer {
-  void print();
-}
-
-class PrintNumber implements Document, Printer {
-  public void print() {
-    System.out.println(1);
-  }
-}
-```
-
-However, one class may not implement two interfaces that prescribe
-methods with the same signature and different return type.
-
-```java
-interface Document {
-  String print();
-}
-
-interface Printer {
-  void print();
-}
-
-class PrintNumber implements Document, Printer { // COMPILE ERROR "PrintNumber is not abstract and does not override abstract method print() in Printer"
-  public String print() { // COMPILE ERROR HERE
-    return "1";
-  }
-
-  public void print() { // COMPILE ERROR HERE
-    System.out.println(1);
-  }
-}
-```
-
-The same goes for abstract classes and interfaces.
-
-```java
-// ERROR "types Printer5 and Document5 are incompatible; both define print(), but with unrelated return types"
-abstract class PrintStuff implements Document5, Printer5 { }
-
-// ERROR "types Printer5 and Document5 are incompatible; both define print(), but with unrelated return types"
-interface IPrintStuff extends Document5, Printer5 { }
-```
-
 ## Repeat: rules for interface variables
 
 The last two rules for interfaces govern interface fields and they are
@@ -919,7 +870,8 @@ the following.
 1. Every field is considered `public`, `static`, and `final`.
 2. Every field must be set when declared.
 
-Rule 1 means that you make a field `private`, `protected` or `abstract`.
+Rule 1 means that you cannot make a field `private`, `protected` or
+`abstract`.
 
 ```java
 interface Document {
@@ -985,13 +937,13 @@ class NumberPrinter implements Printer {
    TODO: example
 5. A default method is public and will not compile if marked
    private or protected.
-   TODO: example
+   TODO: example (p.275)
 6. An interface that extends another may override a default method
    following the rules for overriding.
-   TODO: example
+   TODO: example (p.275)
 7. An interface that extends another may hide a default method by
    redeclaring it as abstract.
-   TODO: example
+   TODO: example (p.275)
 8. Rules 6 and 7 apply to an abstract class that implements an
    interface.
    TODO: example
@@ -1044,15 +996,229 @@ take one of three actions.
 
 TODO: rule 8
 
+## Static interface methods (Java 8)
+
+**Main diff compared to regular static methods.** A static interface
+method is not inherited by any class that implements the interface.
+
+Static interface methods satisfy the following rules.
+
+1. Each static interface method is public and will not compile if
+   marked `private` or `protected`.
+
+   ```java
+   interface Printer {
+
+       static int pageCount() {
+           return 1;
+       }
+
+   //     // modifier private not allowed here
+   //     private static int privateCount() {
+   //         return 0;
+   //     }
+
+   //     // modifier protected not allowed here
+   //     protected static int protectedCount() {
+   //         return 2;
+   //     }
+   }
+   ```
+
+2. To reference a given static interface method, use the name of the
+   corresponding interface.
+
+   ```java
+   class NumberPrinter implements Printer {
+       public static void main(String[] args) {
+           System.out.println("Printer.pageCount() = " + Printer.pageCount()); // "Printer.pageCount() = 1"
+           System.out.println("NumberPrinter.pageCount() = " + NumberPrinter.pageCount()); // cannot find symbol
+           System.out.println("pageCount() = " + pageCount()); // cannot find symbol
+       }
+   }
+   ```
+
+   The code fails to compile because class NumberPrinter does not
+   inherit static interface method `pageCount()`.
+
+
 ## Multiple inheritance
 
-TODO: default methods
-TODO: interface fields
+### Two interfaces with same abstract method
 
-## Study
+There are two rules.
+
+1. A class may implement two interfaces that prescribe the same
+   abstract method, for example:
+
+   ```java
+   interface Document {
+     void print();
+   }
+
+   interface Printer {
+     void print();
+   }
+
+   class PrintNumber implements Document, Printer {
+     public void print() {
+       System.out.println(1);
+     }
+   }
+   ```
+
+2. However, one class may not implement two interfaces that prescribe
+   methods with the same signature and different return type.
+
+   ```java
+   interface Document {
+     String print();
+   }
+
+   interface Printer {
+     void print();
+   }
+
+   class PrintNumber implements Document, Printer { // COMPILE ERROR "PrintNumber is not abstract and does not override abstract method print() in Printer"
+     public String print() { // COMPILE ERROR HERE
+       return "1";
+     }
+
+     public void print() { // COMPILE ERROR HERE
+       System.out.println(1);
+     }
+   }
+   ```
+
+   The same goes for abstract classes and interfaces.
+
+   ```java
+   // ERROR "types Printer and Document are incompatible; both define print(), but with unrelated return types"
+   abstract class PrintStuff implements Document, Printer { }
+
+   // ERROR "types Printer and Document are incompatible; both define print(), but with unrelated return types"
+   interface IPrintStuff extends Document, Printer { }
+   ```
+
+### Two interfaces with same default method
+
+There are two rules.
+
+1. When two interfaces define two default methods of the same signature,
+   a class that implements the interfaces may not inherit both methods.
+   For example:
+
+   ```java
+   interface Document {
+     default void print() {
+         System.out.println("document");
+     }
+   }
+
+   interface Printer {
+     default void print() {
+       System.out.println("printer");
+     }
+   }
+
+   // class PrintableDocument inherits unrelated defaults for print() from types Document and Printer
+   class PrintableDocument implements Document, Printer { }
+   ```
+
+   The rule applies to abstract classes and interfaces as well.
+
+   ```java
+   // class PrintableDocument inherits unrelated defaults for print() from types Document and Printer
+   abstract class PrintableDocument implements Document, Printer { }
+
+   // interface PrintableDocument inherits unrelated defaults for print() from types Document and Printer
+   interface PrintableDocument extends Document, Printer { }
+   ```
+
+2. When two interfaces define two default methods of the same signature,
+   a class that implements the interfaces may override both methods, for
+   example:
+
+   ```java
+   class PrintableDocument implements Document, Printer {
+       public void print() {
+           System.out.println("printable document");
+       }
+       public static void main(String[] args) {
+           new PrintableDocument().print(); // "printable document"
+       }
+   }
+   ```
+
+   The rule applies to abstract classes and interfaces as well.
+
+   ```java
+   abstract class PrintableDocument implements Document, Printer {
+       public void print() {
+           System.out.println("printable document");
+       }
+   }
+
+   interface PrintableDocument extends Document, Printer {
+     default void print() {
+       System.out.println("printable document");
+     }
+   }
+   ```
+
+### Two interfaces with same static method
+
+Two interfaces that define the same static method may be implemented
+by a single class.
+For example:
+
+```java
+interface Document {
+  static void print() {
+    System.out.println("document");
+  }
+}
+
+interface Printer {
+  static void print() {
+    System.out.println("printer");
+  }
+}
+
+class DocumentPrinter implements Document, Printer { }
+```
+
+The same applies to interfaces and abstract classes.
+
+```java
+interface IDocumentPrinter extends Document, Printer { }
+
+abstract class ADocumentPrinter implements Document, Printer { }
+```
+
+### Two interfaces with same field
+
+TODO: explain
+
+## Polymorphism
+
+You may reference an instance of a class by means of a reference that
+satisfies one of the following conditions.
+
+1. The type of the reference is the class.
+2. The type of the reference is a superclass.
+3. The type of the reference is an interface that the class implements.
+
+
+
+## Study / review
 
 - The 5 conditions for overriding
 - The 5 conditions for hiding
 - What method is called when method is overriden / hidden.
 - What variable is accessed when variable is hidden.
 - The 7 rules that govern interfaces
+- Multiple inheritance
+- Default interface methods
+- Static interface methods
+- Kinds of methods you can have in an interface.
