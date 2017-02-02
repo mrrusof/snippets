@@ -1202,14 +1202,65 @@ TODO: explain
 
 ## Polymorphism
 
+TODO: defn
+
 You may reference an instance of a class by means of a reference that
 satisfies one of the following conditions.
 
 1. The type of the reference is the class.
+
+   ```java
+   class Car {
+     public static void main(String[] args) {
+       Car c = new Car;
+     }
+   }
+   ```
+
 2. The type of the reference is a superclass.
+
+   ```java
+   class Car {}
+   class RacingCar extends Car {
+     public static void main(String[] args) {
+       Car c = new RacingCar();
+     }
+   }
+   ```
+
 3. The type of the reference is an interface that the class implements.
 
+   ```java
+   interface Printable { }
+   class Document implements Printable {
+     public static void main(String[] args) {
+       Printable p = new Document();
+     }
+   }
+   ```
 
+The type of an object determines the members of the object.
+The type of a reference to the object determines the methods and
+variables accessible.
+
+## Casting
+
+1. Casting a reference from a subclass to a superclass does not require
+   explicit cast.
+2. Casting a reference from a superclass to a subclass requires an
+   explicit cast.
+3. (inane) Is not possible to cast unrelated types.
+
+Casting works as long as the object involved is a subtype of the
+target type.
+
+## Virtual methods
+
+TODO
+
+## The mandatory polymorphic parameter passing example
+
+TODO
 
 ## Study / review
 
