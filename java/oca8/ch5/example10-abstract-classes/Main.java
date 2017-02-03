@@ -73,9 +73,9 @@ class MyTimeoutException extends TimeoutException {}
 
 class NumberPrinter extends Printer {
 
-    protected String document() {
-        return "1";
-    }
+//     protected String document() {
+//         return "1";
+//     }
 
     // 1. The method must have the same signature (method name and
     //    parameter type list). For example, the following declaration
@@ -86,12 +86,24 @@ class NumberPrinter extends Printer {
     //     return n + "";
     // }
 
+    //    The following declaration works fine.
+
+    // protected String document() {
+    //     return "1";
+    // }
+
     // 2. The method must be at least as accessible as the abstract
     //    method. For example, the following declaration attempts to
     //    assign weaker access privileges and thus fails to compile.
 
-    // private int document() {
-    //     return 1;
+    // private String document() {
+    //     return "1";
+    // }
+
+    //    The following declaration works fine.
+
+    // public String document() {
+    //     return "1";
     // }
 
     // 3. Each exception must be covariant wrt. some exception thrown
@@ -105,9 +117,9 @@ class NumberPrinter extends Printer {
 
     // This works.
 
-    // protected String document() throws TimeoutException, MyTimeoutException {
-    //     throw new TimeoutException();
-    // }
+    protected String document() throws TimeoutException, MyTimeoutException {
+        throw new TimeoutException();
+    }
 
     // 4. The return type must be covariant. For example, the
     // following method fails to compile because return type
@@ -164,3 +176,6 @@ class HelloPrinter extends HeaderPrinter {
 
 //// modifier protected not allowed here
 //protected abstract class BadWorker { }
+
+// // modifier private not allowed here
+// private abstract class BadWorker { }

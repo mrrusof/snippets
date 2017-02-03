@@ -397,7 +397,7 @@ class RacingCar extends Car {
 
 ## Inherited code calls overriding methods but not hidding methods
 
-In inherited code, a given call to a method that is overrided executes
+In inherited code, a given call to a method that is overridden executes
 the overriding method.  In inherited code, a given call to a method
 that is hidden executes the hidden method. For example:
 
@@ -472,31 +472,43 @@ For example:
 
 ```java
 class Car {
-    public static int instanceCount = 0;
+    public static int cylinders = 4;
     private String brand = "Volkswagen";
     public String toString() {
-        return "Car " + brand + "-" + instanceCount;
+        return "Car " + brand + "-" + cylinders;
     }
 }
 
 class RacingCar extends Car {
-    private long instanceCount = 1;
-    public static StringBuilder brand = new StringBuilder("Alfa Romeo");
+    protected long cylinders = 6;
+    protected static StringBuilder brand = new StringBuilder("Alfa Romeo");
+
     public String toString() {
-        return "RacingCar " + brand + "-" + instanceCount + " (parent brand " + super.brand + " and parent count " + super.instanceCount + ")";
+        return "RacingCar " + brand + "-" + cylinders + " descendant of " + super.toString();
+    }
+}
+
+class Formula1Car extends RacingCar {
+    private short cylinders = 4;
+    public String toString() {
+        return "Formula1Car " + brand + "-" + cylinders + " descendant of " + super.brand + "-" + super.cylinders;
     }
     public static void main(String[] args) {
-        // prints "Car Volkswagen-0"
+        // prints "Car Volkswagen-4"
         System.out.println(new Car());
-        // prints "RacingCar Alfa Romeo-1 (parent brand Volkswagen and parent count 0)"
+        // prints "RacingCar Alfa Romeo-6 descendant of Car Volkswagen-4"
         System.out.println(new RacingCar());
+        // prints "Formula1Car Alfa Romeo-4 descendant of Alfa Romeo-6"
+        System.out.println(new Formula1Car());
         // *** non-static variable instanceCount cannot be referenced from a static context
         //System.out.println("instanceCount = " + instanceCount);
     }
 }
 ```
 
-## Declaration of abstract classes and methods
+## Abstract classes
+
+### Declaration of abstract classes and methods
 
 The declaration of each abstract method ends with a semicolon.
 
@@ -568,6 +580,12 @@ methods.
 protected abstract class Worker { } // DOES NOT COMPILE
 ```
 
+An abstract class may not be `private`.
+
+```java
+private abstract class Worker { } // DOES NOT COMPILE
+```
+
 The rules that govern abstract classes are the following.
 
 1. Abstract classes cannot be instantiated.
@@ -586,7 +604,7 @@ The rules that govern abstract methods are the following.
 4. The first 4 rules for overriding methods apply to the
    implementation of abstract methods.
 
-## Implementation of abstract methods
+### Implementation of abstract methods
 
 The first 4 rules for overriding methods apply to the implementation
 of abstract methods. Consider the following abstract class.
@@ -617,27 +635,59 @@ abstract class Printer {
    }
    ```
 
+   The following declaration works fine.
+
+   ```java
+   class NumberPrinter extends Printer {
+     protected String document() {
+       return "1";
+     }
+   }
+   ```
+
 2. The method must be at least as accessible as the abstract
    method. For example, the following declaration attempts to
    assign weaker access privileges and thus fails to compile.
 
    ```java
    class NumberPrinter extends Printer {
-     private int document() {
-         return 1;
+     private String document() {
+         return "1";
+     }
+   }
+   ```
+
+   The following declaration works fine.
+
+   ```java
+   class NumberPrinter extends Printer {
+     public String document() {
+         return "1";
      }
    }
    ```
 
 3. Each exception must be covariant wrt. some exception thrown
    by the abstract method. For example, the following method
-   fails to compile because abstract method does not throw
-   Exception.
+   fails to compile because `TimeoutException` is not a superclass of
+   `Exception`.
 
    ```java
    class NumberPrinter extends Printer {
      protected String document() throws Exception {
          throw new Exception("w00t");
+     }
+   }
+   ```
+
+   The following declarations work fine.
+
+   ```java
+   class MyTimeoutException extends TimeoutException {}
+
+   class NumberPrinter extends Printer {
+     protected String document() throws TimeoutException, MyTimeoutException {
+       throw new TimeoutException();
      }
    }
    ```
@@ -654,7 +704,7 @@ abstract class Printer {
    }
    ```
 
-## Concrete class
+### Concrete class
 
 A concrete class is a nonabstract class that extends an abstract
 class. A given concrete class must implement all abstract methods
@@ -687,11 +737,11 @@ class NumberPrinter extends TimestampedPrinter { // CONCRETE CLASS
 }
 ```
 
-## An abstract class may extend another abstract class
+### An abstract class may extend another abstract class
 
 The example in the previous section shows this case.
 
-## An abstract class may even extend a nonabstract class
+### An abstract class may even extend a nonabstract class
 
 For example:
 
@@ -724,7 +774,7 @@ class HelloPrinter extends HeaderPrinter {
 }
 ```
 
-## Can an abstract class prescribe fields?
+### Can an abstract class prescribe fields?
 
 TODO
 
