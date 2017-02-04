@@ -1,6 +1,8 @@
 //import pkg.AnotherPrinter;
 import java.util.concurrent.TimeoutException;
 
+import pkg1.*;
+
 public class Main {
     public static void main(String[] args) {
         new NumberPrinter().print();
@@ -8,6 +10,20 @@ public class Main {
         new HelloPrinter().print();
         new PrintNumber().print();
         NumberPrinter7.main(args);
+        System.out.println("################################################################################");
+        System.out.println(Article2.d);
+        System.out.println(Article2.pu);
+        System.out.println(Article2.sd);
+        System.out.println(Article2.spu);
+        // error: cannot assign a value to final variable d
+        //Article2.d = "bla";
+        // error: cannot assign a value to final variable sd
+        //Article2.sd = "bla";
+        System.out.println("################################################################################");
+        Article2.print();
+        InheritArticle2.print();
+        new HideArticle2().printFieldsThatHide();
+        new HideArticle2().printHiddenFields();
     }
 }
 
@@ -160,13 +176,35 @@ interface Printer8 {
 }
 
 interface Printer9 {
-    // *** modifier private not allowed here
-    private default void print() {
-        System.out.println("hello");
-    }
+    // // *** modifier private not allowed here
+    // private default void print() {
+    //     System.out.println("hello");
+    // }
 
-    // *** modifier protected not allowed here
-    protected default void print() {
-        System.out.println("hello");
+    // // *** modifier protected not allowed here
+    // protected default void print() {
+    //     System.out.println("hello");
+    // }
+}
+
+// Interfaces may have an empty body.
+interface Article1 { }
+
+// Interfaces may include fields. / Declaration, inheritance, and hiding of fields
+// see pkg1.Article2
+
+class InheritArticle2 implements Article2 {
+    static void print() {
+        System.out.println("InheritArticle2: " + sfpu); // PRINTS INHERITED FIELD
+    }
+}
+
+class HideArticle2 implements Article2 {
+    static StringBuilder sfpu = new StringBuilder("HideArticle2: static final public field"); // HIDES sfpu
+    public void printFieldsThatHide() {
+        System.out.println("HideArticle2: " + sfpu); // PRINTS FIELD THAT HIDES sfpu
+    }
+    public void printHiddenFields() {
+        // System.out.println("HideArticle2: " + super.sfpu); // error: cannot find symbol sfpu
     }
 }
