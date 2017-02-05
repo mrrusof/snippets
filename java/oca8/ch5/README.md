@@ -620,11 +620,13 @@ The rules that govern regular methods in abstract classes are the
 following.
 
 1. There are no restrictions on access modifiers for regular methods
-   (instance or static).
+   (instance or static, final or not).
 2. Regular methods are accessible and inherited like fields of non
    abstract classes.
 3. The rules for overriding/hiding apply to regular methods that are
    instance/static.
+4. Instance regular methods may be hidden by declaring corresponding
+   abstract methods.
 
 The rules that govern fields in abstract classes are the following.
 
@@ -757,9 +759,9 @@ abstract class Printer {
 
 ### Declaration, access, inheriting, and overriding of regular methods in abstract classes
 
-Nonabstract methods (instance or static) declared in abstract classes
-are accessible, inherited, and hidden/overridden like methods in
-nonabstract classes.
+Nonabstract methods (instance or static, final or not) declared in
+abstract classes are accessible, inherited, and hidden/overridden like
+methods in nonabstract classes.
 
 ```java
 abstract class MultiTaskWorker2 {
@@ -768,10 +770,20 @@ abstract class MultiTaskWorker2 {
     static protected void sTask3() { System.out.println("MultiTaskWorker2.sTask3"); }
     static public    void sTask4() { System.out.println("MultiTaskWorker2.sTask4"); }
 
+    static final private   void sfTask1() { System.out.println("MultiTaskWorker2.sTask1"); }
+    static final           void sfTask2() { System.out.println("MultiTaskWorker2.sTask2"); }
+    static final protected void sfTask3() { System.out.println("MultiTaskWorker2.sTask3"); }
+    static final public    void sfTask4() { System.out.println("MultiTaskWorker2.sTask4"); }
+
     private   void task1() { System.out.println("MultiTaskWorker2.task1"); }
               void task2() { System.out.println("MultiTaskWorker2.task2"); }
     protected void task3() { System.out.println("MultiTaskWorker2.task3"); }
     public    void task4() { System.out.println("MultiTaskWorker2.task4"); }
+
+    final private   void fTask1() { System.out.println("MultiTaskWorker2.task1"); }
+    final           void fTask2() { System.out.println("MultiTaskWorker2.task2"); }
+    final protected void fTask3() { System.out.println("MultiTaskWorker2.task3"); }
+    final public    void fTask4() { System.out.println("MultiTaskWorker2.task4"); }
 }
 
 class InheritingWorker extends MultiTaskWorker2 { }
@@ -781,6 +793,11 @@ class OverridingWorker extends MultiTaskWorker2 {
               void task2() { System.out.println("OverridingWorker.task2"); }
     protected void task3() { System.out.println("OverridingWorker.task3"); }
     public    void task4() { System.out.println("OverridingWorker.task4"); }
+
+    final private   void fTask1() { System.out.println("MultiTaskWorker2.task1"); } // method redeclared, not overridden
+    //final           void fTask2() { System.out.println("MultiTaskWorker2.task2"); } // error: fTask2() in OverridingWorker cannot override fTask2() in MultiTaskWorker2
+    //final protected void fTask3() { System.out.println("MultiTaskWorker2.task3"); } // error: fTask3() in OverridingWorker cannot override fTask3() in MultiTaskWorker2
+    //final public    void fTask4() { System.out.println("MultiTaskWorker2.task4"); } // error: fTask4() in OverridingWorker cannot override fTask4() in MultiTaskWorker2
 }
 
 class HidingWorker extends MultiTaskWorker2 {
@@ -789,9 +806,35 @@ class HidingWorker extends MultiTaskWorker2 {
     static protected void sTask3() { System.out.println("HidingWorker.sTask3"); }
     static public    void sTask4() { System.out.println("HidingWorker.sTask4"); }
 
+    static final private   void sfTask1() { System.out.println("HidingWorker.sTask1"); } // method redeclared, not overridden
+    //static final           void sfTask2() { System.out.println("HidingWorker.sTask2"); } // error: sfTask2() in HidingWorker cannot override sfTask2() in MultiTaskWorker2
+    //static final protected void sfTask3() { System.out.println("HidingWorker.sTask3"); } // error: sfTask3() in HidingWorker cannot override sfTask3() in MultiTaskWorker2
+    //static final public    void sfTask4() { System.out.println("HidingWorker.sTask4"); } // error: sfTask4() in HidingWorker cannot override sfTask4() in MultiTaskWorker2
+
               void superSTask2() { super.sTask2(); }
     protected void superSTask3() { super.sTask3(); }
     public    void superSTask4() { super.sTask4(); }
+}
+```
+
+In addition to overriding/hiding like methods in nonabstract classes,
+instance regular methods may be hidden by declaring corresponding
+abstract methods.
+
+```java
+abstract class HidingWorkerByAbstract extends MultiTaskWorker2 {
+
+    // YOU CANNOT HIDE A STATIC METHOD BY ABSTRACT METHOD
+    //abstract static void sTask2(); // error: illegal combination of modifiers: abstract and static
+    //abstract        void sTask2(); // error: sTask2() in HidingWorkerByAbstract cannot override sTask2() in MultiTaskWorker2, overridden method is static
+
+    // YOU CANNOT HIDE A FINAL METHOD EITHER
+    abstract           void fTask2(); // error: fTask2() in HidingWorkerByAbstract cannot override fTask2() in MultiTaskWorker2, overridden method is final
+
+    // INSTANCE METHODS ARE OK
+    abstract           void task2();
+    abstract protected void task3();
+    abstract public    void task4();
 }
 ```
 
@@ -801,85 +844,131 @@ Fields declared in an abstract classes are accessible, inherited, and
 hidden like fields in nonabstract classes.
 
 For example, methods `print()` and `printInherited()` of
-`PrintConstants` and `printHidden()` print the fields defined in abstract class
-`Constants`. Method `printFieldsThatHide()` prints the fields defined in
-`HideAndPrintConstants`.
+`InheritFields` print the fields declared in abstract class
+`Fields`. Method `printHiddenFields()` also prints the fields declared
+in `Fields`. Method `printFieldsThatHide()` prints the fields defined
+in class `HideFields`.
 
 ```java
-abstract class Constants {
-    private String pri = "Constants: private field";
-    String d = "Constants: package default field";
-    protected String pro = "Constants: protected field";
-    public String pu = "Constants: public field";
+abstract class Fields {
+    private   String pri = "Fields: private field";
+              String d   = "Fields: package default field";
+    protected String pro = "Fields: protected field";
+    public    String pu  = "Fields: public field";
 
-    static private String spri = "Constants: static private field";
-    static String sd = "Constants: static package default field";
-    static String spro = "Constants: static protected field";
-    static String spu = "Constants: static public field";
+    final private   String fpri = "Fields: final private field";
+    final           String fd   = "Fields: final package default field";
+    final protected String fpro = "Fields: final protected field";
+    final public    String fpu  = "Fields: final public field";
+
+    static private String spri = "Fields: static private field";
+    static         String sd   = "Fields: static package default field";
+    static         String spro = "Fields: static protected field";
+    static         String spu  = "Fields: static public field";
+
+    final static private String fspri = "Fields: final static private field";
+    final static         String fsd   = "Fields: final static package default field";
+    final static         String fspro = "Fields: final static protected field";
+    final static         String fspu  = "Fields: final static public field";
 
     public void print() {
-        System.out.println(pri);
-        System.out.println(d);
-        System.out.println(pro);
-        System.out.println(pu);
+        System.out.println("Fields: " + pri);
+        System.out.println("Fields: " + d);
+        System.out.println("Fields: " + pro);
+        System.out.println("Fields: " + pu);
 
-        // error: spri has private access in Constants
-        //System.out.println(spri);
-        System.out.println(sd);
-        System.out.println(spro);
-        System.out.println(spu);
+        System.out.println("Fields: " + fpri);
+        System.out.println("Fields: " + fd);
+        System.out.println("Fields: " + fpro);
+        System.out.println("Fields: " + fpu);
+
+        System.out.println("Fields: " + spri);
+        System.out.println("Fields: " + sd);
+        System.out.println("Fields: " + spro);
+        System.out.println("Fields: " + spu);
+
+        System.out.println("Fields: " + fspri);
+        System.out.println("Fields: " + fsd);
+        System.out.println("Fields: " + fspro);
+        System.out.println("Fields: " + fspu);
     }
 }
 
-class PrintConstants extends Constants {
+class InheritFields extends Fields {
     public void printInherited() {
-        // error: pri has private access in Constants
-        //System.out.println(pri);
-        System.out.println(d);
-        System.out.println(pro);
-        System.out.println(pu);
+        //System.out.println("InheritFields: " + pri); // error: pri has private access in Fields
+        System.out.println("InheritFields: " + d);
+        System.out.println("InheritFields: " + pro);
+        System.out.println("InheritFields: " + pu);
 
-        // error: spri has private access in Constants
-        //System.out.println(spri);
-        System.out.println(sd);
-        System.out.println(spro);
-        System.out.println(spu);
+        //System.out.println("InheritFields: " + fpri); // error: fpri has private access in Fields
+        System.out.println("InheritFields: " + fd);
+        System.out.println("InheritFields: " + fpro);
+        System.out.println("InheritFields: " + fpu);
+
+        //System.out.println("InheritFields: " + spri); // error: spri has private access in Fields
+        System.out.println("InheritFields: " + sd);
+        System.out.println("InheritFields: " + spro);
+        System.out.println("InheritFields: " + spu);
+
+        //System.out.println("InheritFields: " + fspri); // error: fspri has private access in Fields
+        System.out.println("InheritFields: " + fsd);
+        System.out.println("InheritFields: " + fspro);
+        System.out.println("InheritFields: " + fspu);
     }
 }
 
-class HideAndPrintConstants extends Constants {
-    private String pri = "HideAndPrintConstants: private field";
-    String d = "HideAndPrintConstants: package default field";
-    protected String pro = "HideAndPrintConstants: protected field";
-    public String pu = "HideAndPrintConstants: public field";
+class HideFields extends Fields {
 
-    static private String spri = "HideAndPrintConstants: static private field";
-    static String sd = "HideAndPrintConstants: static package default field";
-    static String spro = "HideAndPrintConstants: static protected field";
-    static String spu = "HideAndPrintConstants: static public field";
+              String d   = "HideFields: package default field";
+    protected String pro = "HideFields: protected field";
+    public    String pu  = "HideFields: public field";
+
+    final           String fd   = "HideFields: final package default field";
+    final protected String fpro = "HideFields: final protected field";
+    final public    String fpu  = "HideFields: final public field";
+
+    static         String sd   = "HideFields: static package default field";
+    static         String spro = "HideFields: static protected field";
+    static         String spu  = "HideFields: static public field";
+
+    final static         String fsd   = "HideFields: final static package default field";
+    final static         String fspro = "HideFields: final static protected field";
+    final static         String fspu  = "HideFields: final static public field";
+
     public void printFieldsThatHide() {
-        System.out.println(pri);
-        System.out.println(d);
-        System.out.println(pro);
-        System.out.println(pu);
+        System.out.println("HideFields: " + d);
+        System.out.println("HideFields: " + pro);
+        System.out.println("HideFields: " + pu);
 
-        System.out.println(spri);
-        System.out.println(sd);
-        System.out.println(spro);
-        System.out.println(spu);
+        System.out.println("HideFields: " + fd);
+        System.out.println("HideFields: " + fpro);
+        System.out.println("HideFields: " + fpu);
+
+        System.out.println("HideFields: " + sd);
+        System.out.println("HideFields: " + spro);
+        System.out.println("HideFields: " + spu);
+
+        System.out.println("HideFields: " + fsd);
+        System.out.println("HideFields: " + fspro);
+        System.out.println("HideFields: " + fspu);
     }
-    public void printHidden() {
-        // error: pri has private access in Constants
-        //System.out.println(super.pri);
-        System.out.println(super.d);
-        System.out.println(super.pro);
-        System.out.println(super.pu);
+    public void printHiddenFields() {
+        System.out.println("HideFields: " + super.d);
+        System.out.println("HideFields: " + super.pro);
+        System.out.println("HideFields: " + super.pu);
 
-        // error: spri has private access in Constants
-        //System.out.println(super.spri);
-        System.out.println(super.sd);
-        System.out.println(super.spro);
-        System.out.println(super.spu);
+        System.out.println("HideFields: " + super.fd);
+        System.out.println("HideFields: " + super.fpro);
+        System.out.println("HideFields: " + super.fpu);
+
+        System.out.println("HideFields: " + super.sd);
+        System.out.println("HideFields: " + super.spro);
+        System.out.println("HideFields: " + super.spu);
+
+        System.out.println("HideFields: " + super.fsd);
+        System.out.println("HideFields: " + super.fspro);
+        System.out.println("HideFields: " + super.fspu);
     }
 }
 ```
@@ -1035,20 +1124,40 @@ The rules that govern top-level interfaces are the following.
 
 The rules that govern abstract methods are the following.
 
-1. Abstract methods are `abstract` and `public` regardless of whether
+1. Abstract methods are methods that are not marked `default` or
+   `static`.
+2. Abstract methods are `abstract` and `public` regardless of whether
    you apply the keywords or not. Therefore, abstract methods may not
    be `private`, `final`, `static`, `protected` or package default.
-2. TODO
+3. Abstract methods must not provide an implementation.
+4. The first 4 rules for overriding methods apply to the
+   implementation of abstract methods.
 
 The rules that govern default methods are the following.
 
-1. Default methods are `public`.
-2. TODO
+1. Default methods may only be declared in interfaces.
+2. Default methods are methods that are marked `default`. Therefore,
+   default methods may not be `final`, `abstract` or `static`.
+3. Default methods are `public`. Therefore, default methods may not be
+   `private`, `protected` or default package.
+4. Default methods must provide an implementation.
+5. An interface that extends another that declares a default method
+   may take one of three actions.
+   1. Inherit the default method.
+   2. Override the default method with another default declaration.
+      When overriding, overrided method is not accesible by `super`.
+      (TODO: compare example p.275)
+   3. Hide the default method with an abstact declaration.
+      (TODO: compare example p.275)
+6. The previous rule applies to an abstract class that implements an
+   interface.
 
 The rules that govern static methods are the following.
 
-1. Static methods are `public`.
-2. TODO
+1. Static methods are marked `static` (duh).
+2. Static methods are `public` by default.
+3. Static methods are accessible via the name of the interface.
+4. Static methods are not inherited.
 
 The rules that govern fields in interfaces are the following.
 
@@ -1056,9 +1165,9 @@ The rules that govern fields in interfaces are the following.
    you apply the keywords or not.
 2. A field must be set when declared.
 3. Fields are inherited like fields of non abstract classes.
-4. Fields are not accessible by reference `super`.
-5. Fields given by an interface may be hidden following the rule for
+4. Fields given by an interface may be hidden following the rule for
    hidding. See section "Hiding variables."
+5. Fields are not accessible by reference `super`.
 
 ### Declaration of interfaces
 
@@ -1079,36 +1188,279 @@ interface Article {
 Interfaces may include abstract, default, and/or static methods.
 
 ```java
-// TODO
-```
-
-Interfaces may not be `private`, `protected`
-
-```java
-//interface Printer { // THIS AND THE FOLLOWING EVALUATE THE SAME
-abstract interface Printer {
-    // private String DEFAULT_PAPER_SIZE = "A4"; // FAILS WITH "error: modifier private not allowed here"
-
-    // public String DEFAULT_PAPER_SIZE = "A4"; // THIS AND THE FOLLOWING EVALUATE THE SAME
-    // static String DEFAULT_PAPER_SIZE = "A4"; // THIS AND THE FOLLOWING EVALUATE THE SAME
-    // final String DEFAULT_PAPER_SIZE = "A4"; // THIS AND THE FOLLOWING EVALUATE THE SAME
-    String DEFAULT_PAPER_SIZE = "A4";
-
-    // private void print(); // FAILS WITH "error: modifier private not allowed here"
-    // final void print(); // FAILS WITH "error: modifier final not allowed here"
-    // static abstract void print(); // FAILS WITH "illegal combination of modifiers: abstract and static"
-
-    // public abstract void print(); // THE FOLLOWING EVALUATE THE SAME
-    // public void print(); // THIS AND THE FOLLOWING EVALUATE THE SAME
-    // abstract void print(); // THIS AND THE FOLLOWING EVALUATE THE SAME
-    void print();
+interface Article3 {
+    void a();
+    default void d() {
+        System.out.println("Article3: default method");
+    }
+    static void s() {
+        System.out.println("Article3: static method");
+    }
 }
 ```
 
+Interfaces are `abstract`.
+
+```java
+//interface Printer { } // THIS AND THE FOLLOWING EVALUATE THE SAME
+abstract interface Printer { }
+```
+
+Interfaces may not be `private`.
+
+```java
+// error: modifier private not allowed here
+private interface Article4 { }
+```
+
+Interfaces may not be `protected`.
+
+```java
+// error: modifier protected not allowed here
+protected interface Article5 { }
+```
+
+Interfaces may not be `final`.
+
+```java
+// error: illegal combination of modifiers: interface and final
+final interface Article6 { }
+```
+
+Interfaces may be `public` or default package.
+
+```java
+// file Article2.java
+package pkg;
+
+public interface Article2 { ... }
+
+interface Article7 { }
+
+// some other file in other package...
+
+import pkg.Article7; // error: Article7 is not public in pkg; cannot be accessed from outside package
+```
+
+### Declaration, access, inheriting, and implementation of abstract methods
+
+Abstract methods are not marked `default` or `static`. Abstract
+methods may not be `private`, `final`, `static`,
+`protected` or package default. Abstract methods must not provide an
+implementation.
+
+```java
+interface Printer1 {
+                      void print(); // THIS AND THE NEXT EVALUATE THE SAME
+    //       abstract void print(); // THIS AND THE NEXT EVALUATE THE SAME
+    //public abstract void print(); // THIS AND THE NEXT EVALUATE THE SAME
+    //public          void print();
+
+    //private         void print(); // error: modifier private not allowed here
+    //final           void print(); // error: modifier final not allowed here
+    //static          void print(); // error: missing method body, or declare abstract
+    //protected       void print(); // error: modifier protected not allowed here
+
+    // Cannot declare package default method because it will be applied `public abstract` modifiers.
+}
+```
+
+An interface that implements another inhterits its members.
+
+```java
+interface InheritPrinter1 extends Printer1 {
+    // inherits `public abstract void print();`
+    Object getContents() throws Exception;
+}
+```
+
+Every concrete class must implement all of the intherited abstract
+methods. The first 4 rules for overriding methods apply to the
+implementation of abstract methods.
+
+```java
+class ImplementPrinter1 implements InheritPrinter1 {
+    public void print() {
+        System.out.println("ImplementPrinter1: 1");
+    }
+    public String getContents() { // covariant return and exception list
+        return "ImplementPrinter1: 2";
+    }
+}
+```
+
+### Default interface methods (introduced in Java 8) vs. regular instance methods
+
+The purpose of a default method is to provide a default implementation
+that can be overridden. Thus, default methods cannot be `static`,
+`final` or `abstract`.
+
+Default methods correspond to regular instance methods in abstract
+classes. The difference is that a default method, like `print()` in the
+following example, cannot be `final` `private`, `protected` or package
+default.
+
+```java
+interface Printer {
+  String document() throws TimeoutException;
+  default void print() {
+    try {
+      System.out.println("printed document: " + document());
+    } catch(TimeoutException e) {
+      System.out.println("the document took too long to render");
+    }
+  }
+}
+
+class NumberPrinter implements Printer {
+    public String document() {
+        return "1";
+    }
+    public static void main(String[] args) {
+        new NumberPrinter().print(); // "printed document: 1"
+    }
+}
+```
+
+### Declaration, access, inheriting, and implementation of default methods
+
+Default methods are marked `default` and are always
+`public`. Therefore, default methods may not be `abstract`, `static`,
+`final`, `private`, `protected` or package default.
+Default methods must provide an implementation.
+
+```java
+interface Printer4 {
+      public    default void pu()  { System.out.println("Printer4: default public method"); } // THIS AND THE NEXT EVALUATE THE SAME
+    //          default void d()   { System.out.println("Printer4: default package default method"); }
+
+    //abstract  default void abs() { System.out.println("Printer4: default abstract method"); } // error: illegal combination of modifiers: abstract and default
+    //static    default void st()  { System.out.println("Printer4: default static method"); } // error: illegal combination of modifiers: static and default
+    //final     default void fin() { System.out.println("Printer4: default final method"); } // error: modifier final not allowed here
+
+    //private   default void pri() { System.out.println("Printer4: default private method"); } // error: modifier private not allowed here
+    //protected default void pro() { System.out.println("Printer4: default protected method"); } // error: modifier protected not allowed here
+
+    // Cannot declare package default method because it will be applied modifier `public`.
+}
+```
+
+An interface that extends another that declares a default method may
+either intherit the method, override it or hide it.
+
+```java
+interface InheritPrinter4 extends Printer4 {
+    // inherits `public default void pu() { ... }`
+}
+
+interface OverridePrinter4 extends Printer4 {
+    public default void pu()  { // Overriding is really hiding
+        //super.pu(); // error: cannot find symbol `super`
+        System.out.println("OverridePrinter4: default public method");
+    }
+}
+
+class ConcreteOverridePrinter4 implements OverridePrinter4 {
+    public static void main(String[] args) {
+        new ConcreteOverridePrinter4().pu(); // prints "OverridePrinter4: default public method"
+    }
+}
+
+interface HidePrinter4 extends Printer4 {
+    abstract void pu();
+}
+
+class ConcreteHidePrinter4 implements HidePrinter4 {
+    public void pu() { System.out.println("ConcreteHidePrinter4: public method"); }
+    public static void main(String[] args) {
+        new ConcreteHidePrinter4().pu(); // prints "ConcreteHidePrinter4: public method"
+    }
+}
+```
+
+The same rule applies to abstract classes that implement interfaces.
+
+```java
+abstract class AInheritPrinter4 implements Printer4 {
+    // inherits `public default void pu() { ... }`
+}
+
+abstract class AOverridePrinter4 implements Printer4 {
+    public void pu()  { // Overriding is really hiding
+        //super.pu(); // error: cannot find symbol `super`, SAME AS IN EXAMPLE WITH CLASSES
+        System.out.println("OverridePrinter4: default public method");
+    }
+}
+
+class ConcreteAOverridePrinter4 extends AOverridePrinter4 {
+    public static void main(String[] args) {
+        new ConcreteAOverridePrinter4().pu(); // prints "OverridePrinter4: default public method"
+    }
+}
+
+abstract class AHidePrinter4 implements Printer4 {
+    public abstract void pu(); // remember to indicate access modifier `public`
+}
+
+class ConcreteAHidePrinter4 extends AHidePrinter4 {
+    public void pu() { System.out.println("ConcreteAHidePrinter4: public method"); }
+    public static void main(String[] args) {
+        new ConcreteAHidePrinter4().pu(); // prints "ConcreteAHidePrinter4: public method"
+    }
+}
+```
+
+### Static interface methods (Java 8)
+
+**Main diff compared to regular static methods.** A static interface
+method is not inherited by any class that implements the interface.
+
+Static interface methods satisfy the following rules.
+
+1. Each static interface method is public and will not compile if
+   marked `private` or `protected`.
+
+   ```java
+   interface Printer {
+
+       static int pageCount() {
+           return 1;
+       }
+
+   //     // modifier private not allowed here
+   //     private static int privateCount() {
+   //         return 0;
+   //     }
+
+   //     // modifier protected not allowed here
+   //     protected static int protectedCount() {
+   //         return 2;
+   //     }
+   }
+   ```
+
+2. To reference a given static interface method, use the name of the
+   corresponding interface.
+
+   ```java
+   class NumberPrinter implements Printer {
+       public static void main(String[] args) {
+           System.out.println("Printer.pageCount() = " + Printer.pageCount()); // "Printer.pageCount() = 1"
+           System.out.println("NumberPrinter.pageCount() = " + NumberPrinter.pageCount()); // cannot find symbol
+           System.out.println("pageCount() = " + pageCount()); // cannot find symbol
+       }
+   }
+   ```
+
+3. Static methods are not inherited. For example,
+   The code fails to compile because class NumberPrinter does not
+   inherit static interface method `pageCount()`.
+
+
 ### Declaration, access, inheritance, and hiding of fields
 
-Fields in interfaces are always constants (`public`, `final`, and
-`static`). Therefore, fields may not be `private`, `protected` or
+Fields in interfaces are always public constants (`public`, `final`,
+and `static`). Therefore, fields may not be `private`, `protected` or
 package default. Consider the following example.
 
 ```java
@@ -1204,151 +1556,6 @@ class HelloPrinter extends Printer {
 ```
 
 
-### Default interface methods (introduced in Java 8)
-
-The purpose of a default method is to provide a default implementation
-that can be overriden. Thus, default methods cannot be static, final
-or abstract.
-
-With default methods you can write something very similar to abstract
-class from "Implementation of abstract methods". Difference is that
-you cannot make `document()` protected.
-
-```java
-interface Printer {
-  String document() throws TimeoutException;
-  default void print() {
-    try {
-      System.out.println("printed document: " + document());
-    } catch(TimeoutException e) {
-      System.out.println("the document took too long to render");
-    }
-  }
-}
-
-class NumberPrinter implements Printer {
-    public String document() {
-        return "1";
-    }
-    public static void main(String[] args) {
-        new NumberPrinter().print(); // "printed document: 1"
-    }
-}
-```
-
-#### Rules
-
-1. A default method may only be declared in an interface.
-2. A default method indicates keyword `default`.
-3. A default method provides a body.
-4. A default method will not compile if made static, final, or
-   abstract.
-   TODO: example
-5. A default method is public and will not compile if marked
-   private or protected.
-   TODO: example (p.275)
-6. An interface that extends another may override a default method
-   following the rules for overriding.
-   TODO: example (p.275)
-7. An interface that extends another may hide a default method by
-   redeclaring it as abstract.
-   TODO: example (p.275)
-8. Rules 6 and 7 apply to an abstract class that implements an
-   interface.
-   TODO: example
-
-For rule 4, consider the following example.
-
-```java
-interface Printer8 {
-    // *** illegal combination of modifiers: static and default
-    static default void print() {
-        System.out.println("hello");
-    }
-
-    // *** modifier final not allowed here
-    final default void print() {
-        System.out.println("hello");
-    }
-
-    // *** illegal combination of modifiers: abstract and default
-    abstract default void print() {
-        System.out.println("hello");
-    }
-}
-```
-
-For rule 5, consider the following example.
-
-```java
-interface Printer9 {
-    // *** modifier private not allowed here
-    private default void print() {
-        System.out.println("hello");
-    }
-
-    // *** modifier protected not allowed here
-    protected default void print() {
-        System.out.println("hello");
-    }
-}
-```
-
-#### Recap: Rules 6, 7, 8
-
-An interface that extends another that defines a default method may
-take one of three actions.
-
-1. Inherit the default method.
-2. Override the default method with another default declaration (rule 6)
-3. Hide the default method with an abstract declaration (rule 7)
-
-TODO: rule 8
-
-### Static interface methods (Java 8)
-
-**Main diff compared to regular static methods.** A static interface
-method is not inherited by any class that implements the interface.
-
-Static interface methods satisfy the following rules.
-
-1. Each static interface method is public and will not compile if
-   marked `private` or `protected`.
-
-   ```java
-   interface Printer {
-
-       static int pageCount() {
-           return 1;
-       }
-
-   //     // modifier private not allowed here
-   //     private static int privateCount() {
-   //         return 0;
-   //     }
-
-   //     // modifier protected not allowed here
-   //     protected static int protectedCount() {
-   //         return 2;
-   //     }
-   }
-   ```
-
-2. To reference a given static interface method, use the name of the
-   corresponding interface.
-
-   ```java
-   class NumberPrinter implements Printer {
-       public static void main(String[] args) {
-           System.out.println("Printer.pageCount() = " + Printer.pageCount()); // "Printer.pageCount() = 1"
-           System.out.println("NumberPrinter.pageCount() = " + NumberPrinter.pageCount()); // cannot find symbol
-           System.out.println("pageCount() = " + pageCount()); // cannot find symbol
-       }
-   }
-   ```
-
-   The code fails to compile because class NumberPrinter does not
-   inherit static interface method `pageCount()`.
 
 
 ## Multiple inheritance
@@ -1507,7 +1714,26 @@ abstract class ADocumentPrinter implements Document, Printer { }
 
 ### Two interfaces with same field
 
-TODO: explain
+A class may implement two interfaces that define the same field
+name, but they may not reference the field.
+
+```java
+interface IHaveField {
+    String        field = "IHaveField";
+}
+
+interface IHaveFieldToo {
+    StringBuilder field = new StringBuilder("IHaveFieldToo");
+}
+
+class WhoWins implements IHaveField, IHaveFieldToo {
+    public void print() {
+        // RUNTIME ERROR
+        // error: reference to field is ambiguous, both variable field in IHaveField and variable field in IHaveFieldToo match
+        System.out.println(field);
+    }
+}
+```
 
 ## Polymorphism
 
@@ -1581,7 +1807,8 @@ TODO
 - The 5 conditions for hiding
 - What method is called when method is overriden / hidden.
 - What variable is accessed when variable is hidden.
-- The 7 rules that govern interfaces
+- The rules that govern abstract classes
+- The rules that govern interfaces
 - Multiple inheritance
 - Default interface methods
 - Static interface methods

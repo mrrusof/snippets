@@ -9,13 +9,13 @@ public class Main {
         new TNumberPrinter(1).print();
         new HelloPrinter().print();
         System.out.println("################################################################################");
-        new PrintConstants().print();
+        new InheritFields().print();
         System.out.println("################################################################################");
-        new PrintConstants().printInherited();
+        new InheritFields().printInherited();
         System.out.println("################################################################################");
-        new HideAndPrintConstants().printHidden();
+        new HideFields().printHiddenFields();
         System.out.println("################################################################################");
-        new HideAndPrintConstants().printFieldsThatHide();
+        new HideFields().printFieldsThatHide();
         System.out.println("################################################################################");
         InheritingWorker.sTask2();
         InheritingWorker.sTask3();
@@ -220,80 +220,125 @@ class HelloPrinter extends HeaderPrinter {
 // final abstract class BadWorker { }
 
 // Can an abstract class prescribe fields?
-abstract class Constants {
-    private String pri = "Constants: private field";
-    String d = "Constants: package default field";
-    protected String pro = "Constants: protected field";
-    public String pu = "Constants: public field";
+abstract class Fields {
+    private   String pri = "Fields: private field";
+              String d   = "Fields: package default field";
+    protected String pro = "Fields: protected field";
+    public    String pu  = "Fields: public field";
 
-    static private String spri = "Constants: static private field";
-    static String sd = "Constants: static package default field";
-    static String spro = "Constants: static protected field";
-    static String spu = "Constants: static public field";
+    final private   String fpri = "Fields: final private field";
+    final           String fd   = "Fields: final package default field";
+    final protected String fpro = "Fields: final protected field";
+    final public    String fpu  = "Fields: final public field";
+
+    static private String spri = "Fields: static private field";
+    static         String sd   = "Fields: static package default field";
+    static         String spro = "Fields: static protected field";
+    static         String spu  = "Fields: static public field";
+
+    final static private String fspri = "Fields: final static private field";
+    final static         String fsd   = "Fields: final static package default field";
+    final static         String fspro = "Fields: final static protected field";
+    final static         String fspu  = "Fields: final static public field";
 
     public void print() {
-        System.out.println(pri);
-        System.out.println(d);
-        System.out.println(pro);
-        System.out.println(pu);
+        System.out.println("Fields: " + pri);
+        System.out.println("Fields: " + d);
+        System.out.println("Fields: " + pro);
+        System.out.println("Fields: " + pu);
 
-        // error: spri has private access in Constants
-        //System.out.println(spri);
-        System.out.println(sd);
-        System.out.println(spro);
-        System.out.println(spu);
+        System.out.println("Fields: " + fpri);
+        System.out.println("Fields: " + fd);
+        System.out.println("Fields: " + fpro);
+        System.out.println("Fields: " + fpu);
+
+        System.out.println("Fields: " + spri);
+        System.out.println("Fields: " + sd);
+        System.out.println("Fields: " + spro);
+        System.out.println("Fields: " + spu);
+
+        System.out.println("Fields: " + fspri);
+        System.out.println("Fields: " + fsd);
+        System.out.println("Fields: " + fspro);
+        System.out.println("Fields: " + fspu);
     }
 }
 
-class PrintConstants extends Constants {
+class InheritFields extends Fields {
     public void printInherited() {
-        // error: pri has private access in Constants
-        //System.out.println(pri);
-        System.out.println(d);
-        System.out.println(pro);
-        System.out.println(pu);
+        //System.out.println("InheritFields: " + pri); // error: pri has private access in Fields
+        System.out.println("InheritFields: " + d);
+        System.out.println("InheritFields: " + pro);
+        System.out.println("InheritFields: " + pu);
 
-        // error: spri has private access in Constants
-        //System.out.println(spri);
-        System.out.println(sd);
-        System.out.println(spro);
-        System.out.println(spu);
+        //System.out.println("InheritFields: " + fpri); // error: fpri has private access in Fields
+        System.out.println("InheritFields: " + fd);
+        System.out.println("InheritFields: " + fpro);
+        System.out.println("InheritFields: " + fpu);
+
+        //System.out.println("InheritFields: " + spri); // error: spri has private access in Fields
+        System.out.println("InheritFields: " + sd);
+        System.out.println("InheritFields: " + spro);
+        System.out.println("InheritFields: " + spu);
+
+        //System.out.println("InheritFields: " + fspri); // error: fspri has private access in Fields
+        System.out.println("InheritFields: " + fsd);
+        System.out.println("InheritFields: " + fspro);
+        System.out.println("InheritFields: " + fspu);
     }
 }
 
-class HideAndPrintConstants extends Constants {
-    private String pri = "HideAndPrintConstants: private field";
-    String d = "HideAndPrintConstants: package default field";
-    protected String pro = "HideAndPrintConstants: protected field";
-    public String pu = "HideAndPrintConstants: public field";
+class HideFields extends Fields {
 
-    static private String spri = "HideAndPrintConstants: static private field";
-    static String sd = "HideAndPrintConstants: static package default field";
-    static String spro = "HideAndPrintConstants: static protected field";
-    static String spu = "HideAndPrintConstants: static public field";
+              String d   = "HideFields: package default field";
+    protected String pro = "HideFields: protected field";
+    public    String pu  = "HideFields: public field";
+
+    final           String fd   = "HideFields: final package default field";
+    final protected String fpro = "HideFields: final protected field";
+    final public    String fpu  = "HideFields: final public field";
+
+    static         String sd   = "HideFields: static package default field";
+    static         String spro = "HideFields: static protected field";
+    static         String spu  = "HideFields: static public field";
+
+    final static         String fsd   = "HideFields: final static package default field";
+    final static         String fspro = "HideFields: final static protected field";
+    final static         String fspu  = "HideFields: final static public field";
+
     public void printFieldsThatHide() {
-        System.out.println(pri);
-        System.out.println(d);
-        System.out.println(pro);
-        System.out.println(pu);
+        System.out.println("HideFields: " + d);
+        System.out.println("HideFields: " + pro);
+        System.out.println("HideFields: " + pu);
 
-        System.out.println(spri);
-        System.out.println(sd);
-        System.out.println(spro);
-        System.out.println(spu);
+        System.out.println("HideFields: " + fd);
+        System.out.println("HideFields: " + fpro);
+        System.out.println("HideFields: " + fpu);
+
+        System.out.println("HideFields: " + sd);
+        System.out.println("HideFields: " + spro);
+        System.out.println("HideFields: " + spu);
+
+        System.out.println("HideFields: " + fsd);
+        System.out.println("HideFields: " + fspro);
+        System.out.println("HideFields: " + fspu);
     }
-    public void printHidden() {
-        // error: pri has private access in Constants
-        //System.out.println(super.pri);
-        System.out.println(super.d);
-        System.out.println(super.pro);
-        System.out.println(super.pu);
+    public void printHiddenFields() {
+        System.out.println("HideFields: " + super.d);
+        System.out.println("HideFields: " + super.pro);
+        System.out.println("HideFields: " + super.pu);
 
-        // error: spri has private access in Constants
-        //System.out.println(super.spri);
-        System.out.println(super.sd);
-        System.out.println(super.spro);
-        System.out.println(super.spu);
+        System.out.println("HideFields: " + super.fd);
+        System.out.println("HideFields: " + super.fpro);
+        System.out.println("HideFields: " + super.fpu);
+
+        System.out.println("HideFields: " + super.sd);
+        System.out.println("HideFields: " + super.spro);
+        System.out.println("HideFields: " + super.spu);
+
+        System.out.println("HideFields: " + super.fsd);
+        System.out.println("HideFields: " + super.fspro);
+        System.out.println("HideFields: " + super.fspu);
     }
 }
 
@@ -318,10 +363,20 @@ abstract class MultiTaskWorker2 {
     static protected void sTask3() { System.out.println("MultiTaskWorker2.sTask3"); }
     static public    void sTask4() { System.out.println("MultiTaskWorker2.sTask4"); }
 
+    static final private   void sfTask1() { System.out.println("MultiTaskWorker2.sTask1"); }
+    static final           void sfTask2() { System.out.println("MultiTaskWorker2.sTask2"); }
+    static final protected void sfTask3() { System.out.println("MultiTaskWorker2.sTask3"); }
+    static final public    void sfTask4() { System.out.println("MultiTaskWorker2.sTask4"); }
+
     private   void task1() { System.out.println("MultiTaskWorker2.task1"); }
               void task2() { System.out.println("MultiTaskWorker2.task2"); }
     protected void task3() { System.out.println("MultiTaskWorker2.task3"); }
     public    void task4() { System.out.println("MultiTaskWorker2.task4"); }
+
+    final private   void fTask1() { System.out.println("MultiTaskWorker2.task1"); }
+    final           void fTask2() { System.out.println("MultiTaskWorker2.task2"); }
+    final protected void fTask3() { System.out.println("MultiTaskWorker2.task3"); }
+    final public    void fTask4() { System.out.println("MultiTaskWorker2.task4"); }
 }
 
 class InheritingWorker extends MultiTaskWorker2 { }
@@ -331,6 +386,11 @@ class OverridingWorker extends MultiTaskWorker2 {
               void task2() { System.out.println("OverridingWorker.task2"); }
     protected void task3() { System.out.println("OverridingWorker.task3"); }
     public    void task4() { System.out.println("OverridingWorker.task4"); }
+
+    final private   void fTask1() { System.out.println("MultiTaskWorker2.task1"); } // method redeclared, not overridden
+    //final           void fTask2() { System.out.println("MultiTaskWorker2.task2"); } // error: fTask2() in OverridingWorker cannot override fTask2() in MultiTaskWorker2
+    //final protected void fTask3() { System.out.println("MultiTaskWorker2.task3"); } // error: fTask3() in OverridingWorker cannot override fTask3() in MultiTaskWorker2
+    //final public    void fTask4() { System.out.println("MultiTaskWorker2.task4"); } // error: fTask4() in OverridingWorker cannot override fTask4() in MultiTaskWorker2
 }
 
 class HidingWorker extends MultiTaskWorker2 {
@@ -339,7 +399,27 @@ class HidingWorker extends MultiTaskWorker2 {
     static protected void sTask3() { System.out.println("HidingWorker.sTask3"); }
     static public    void sTask4() { System.out.println("HidingWorker.sTask4"); }
 
+    static final private   void sfTask1() { System.out.println("HidingWorker.sTask1"); } // method redeclared, not overridden
+    //static final           void sfTask2() { System.out.println("HidingWorker.sTask2"); } // error: sfTask2() in HidingWorker cannot override sfTask2() in MultiTaskWorker2
+    //static final protected void sfTask3() { System.out.println("HidingWorker.sTask3"); } // error: sfTask3() in HidingWorker cannot override sfTask3() in MultiTaskWorker2
+    //static final public    void sfTask4() { System.out.println("HidingWorker.sTask4"); } // error: sfTask4() in HidingWorker cannot override sfTask4() in MultiTaskWorker2
+
               void superSTask2() { super.sTask2(); }
     protected void superSTask3() { super.sTask3(); }
     public    void superSTask4() { super.sTask4(); }
+}
+
+abstract class HidingWorkerByAbstract extends MultiTaskWorker2 {
+
+    // YOU CANNOT HIDE A STATIC METHOD BY ABSTRACT METHOD
+    //abstract static void sTask2(); // error: illegal combination of modifiers: abstract and static
+    //abstract        void sTask2(); // error: sTask2() in HidingWorkerByAbstract cannot override sTask2() in MultiTaskWorker2, overridden method is static
+
+    // YOU CANNOT HIDE A FINAL METHOD EITHER
+    abstract           void fTask2(); // error: fTask2() in HidingWorkerByAbstract cannot override fTask2() in MultiTaskWorker2, overridden method is final
+
+    // INSTANCE METHODS ARE OK
+    abstract           void task2();
+    abstract protected void task3();
+    abstract public    void task4();
 }
