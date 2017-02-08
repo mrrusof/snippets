@@ -17,16 +17,51 @@
 java.lang.RuntimeException
 ```
 
+### Error
+
 `Error` and its subclasses are fatal errors.
+
+For the exam, think that errors are thrown only by the JVM and should
+not be handled by the programmer.
+
+Relevant errors for the exam are the following.
+
+- ExceptionInInitializerError
+- StackOverflowError
+- NoClassDefFoundError
+
+### Checked exceptions
 
 `Exception` and its subclasses that do not descend from
 `RuntimeException` are _checked exceptions_.
 Checked exceptions are recoverable errors that are expected during
 runtime.
 
+For the exam, think that a given checked exception is either thrown by
+a programmer or by the JVM.
+
+Relevant checked exceptions for the exam are the following.
+
+- FileNotFoundException (subclass of IOException)
+- IOException
+
+### Unchecked exceptions
+
 `RuntimeException` and its subclasses are _unchecked exceptions_.
 Unchecked exceptions are recoverable errors that are not expected
 during runtime.
+
+For the exam, think that a given runtime exception is either thrown by
+user code or by the JVM.
+
+Relevant unchecked exceptions for the exam are the following.
+
+1. ArithmeticException
+2. ArrayIndexOutOfBoundsException
+3. ClassCastException
+4. IllegalArgumentException
+5. NullPointerException
+6. NumberFormatException (subclass of IllegalArgumentException)
 
 ## Handle or declare rule
 
@@ -140,6 +175,28 @@ class CatchOrder {
 }
 ```
 
+## A checked exception must be possible try clause
+
+A try clause must either throw a checked exception or call a method
+that throws a checked exception. Otherwise, the code won't
+compile. For example:
+
+
+```java
+class IMustBeThrown extends Exception { }
+
+class MustThrowCheckedException {
+    public void exec() {
+        try {
+            System.out.println("I don't throw any exceptions");
+        } catch(IMustBeThrown e) { // error: exception IMustBeThrown is never thrown in body of corresponding try statement
+            System.out.println("caught IMustBeThrown");
+        }
+    }
+}
+
+```
+
 ## Masking exceptions
 
 When a catch clause and a corresponding finally clause each throw an
@@ -159,3 +216,34 @@ try {
     System.out.println("caught exception thrown by finally clause");
 }
 ```
+
+## Overriding with exceptions
+
+When a method declaration overrides another method, the declaration
+may not include any new **checked** exceptions.
+
+```java
+class IMustBeThrown extends Exception { }
+
+class ParentClass {
+    public void task() throws IMustBeThrown { }
+}
+
+class BadChildClass extends ParentClass {
+    public void task() throws Exception { } // error: task() in ChildClass cannot override task() in ParentClass, overridden method does not throw Exception
+}
+
+class GoodChildClass extends ParentClass {
+    public void task() throws RuntimeException { } // this is fine!
+    public static void main(String[] args) {
+        new GoodChildClass().task(); // this call is fine, runtime exceptions are unchecked exceptions
+    }
+}
+```
+
+## TODO / Study
+
+- Common runtime exceptions
+- Common checked exceptions
+- Common errors
+- Overriding with exceptions

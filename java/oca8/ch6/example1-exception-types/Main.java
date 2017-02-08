@@ -4,6 +4,8 @@ public class Main {
     public static void main(String[] args) {
         new CatchOrder().exec();
         new ExceptionMasking().exec();
+        new MustThrowCheckedException().exec();
+        GoodChildClass.main(args);
         new Work().work();
     }
 }
@@ -86,5 +88,32 @@ class ExceptionMasking {
         } catch(TheChild e) {
             System.out.println("caught exception thrown by finally clause");
         }
+    }
+}
+
+class IMustBeThrown extends Exception { }
+
+class MustThrowCheckedException {
+    public void exec() {
+        // try {
+        //     System.out.println("I don't throw any exceptions");
+        // } catch(IMustBeThrown e) { // error: exception IMustBeThrown is never thrown in body of corresponding try statement
+        //     System.out.println("caught IMustBeThrown");
+        // }
+    }
+}
+
+class ParentClass {
+    public void task() throws IMustBeThrown { }
+}
+
+// class BadChildClass extends ParentClass {
+//     public void task() throws Exception { } // error: task() in ChildClass cannot override task() in ParentClass, overridden method does not throw Exception
+// }
+
+class GoodChildClass extends ParentClass {
+    public void task() throws RuntimeException { } // this is fine!
+    public static void main(String[] args) {
+        new GoodChildClass().task();
     }
 }
