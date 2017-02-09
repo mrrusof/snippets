@@ -26,14 +26,17 @@ not be handled by the programmer.
 
 Relevant errors for the exam are the following.
 
-- ExceptionInInitializerError
-- StackOverflowError
-- NoClassDefFoundError
+- ExceptionInInitializerError: a static initializer throws an exception
+- StackOverflowError: you can't stop recursing
+- NoClassDefFoundError: you accidentally deleted a *.class file
 
 ### Checked exceptions
 
 `Exception` and its subclasses that do not descend from
 `RuntimeException` are _checked exceptions_.
+(**Actually, Java docs say that `Throwable` and any subclass that is not
+also a subclass of either `Error` or `RuntimeException` is regarded as
+a checked exception.**)
 Checked exceptions are recoverable errors that are expected during
 runtime.
 
@@ -48,6 +51,8 @@ Relevant checked exceptions for the exam are the following.
 ### Unchecked exceptions
 
 `RuntimeException` and its subclasses are _unchecked exceptions_.
+(**Java docs say that also `Error` and its subclasses are regarded as
+unchecked exceptions.**)
 Unchecked exceptions are recoverable errors that are not expected
 during runtime.
 
@@ -72,20 +77,56 @@ method.
 It is possible to catch checked and unchecked exceptions.
 
 ```java
-TODO
+class CheckedException extends Exception { }
+class UncheckedException extends RuntimeException { }
+
+class CatchCheckedAndUncheckedExceptions {
+    public static void main(String[] args) {
+        try {
+            throw new CheckedException();
+        } catch(CheckedException e) {
+            System.out.println("caught a checked exception");
+        }
+        try {
+            throw new UncheckedException();
+        } catch(UncheckedException e) {
+            System.out.println("caught an unchecked exception");
+        }
+
+    }
+}
 ```
 
 Only checked exceptions are required to be handled or declared to be
 thrown.
 
 ```java
-TODO
+class WhatMustIHandleOrDeclare {
+    public static void checked() {
+        throw new CheckedException(); // error: unreported exception CheckedException; must be caught or declared to be thrown
+    }
+    public static void unchecked() {
+        throw new UncheckedException(); // this line causes no compiler error
+    }
+}
 ```
 
-Errors may not be caught and may not be declared to be thrown.
+Errors may be caught but should not be.
+Also, errors are unchecked.
 
 ```java
-TODO
+class Errors {
+    public static void givesAnError() {
+        throw new Error(); // line does not cause compiler error
+    }
+    public static void thisIsFine() {
+        try {
+            throw new Error();
+        } catch(Error e) {
+            System.out.println("caught the error, but shouldn't have");
+        }
+    }
+}
 ```
 
 ## Try-Catch-Finally statement
@@ -243,7 +284,7 @@ class GoodChildClass extends ParentClass {
 
 ## TODO / Study
 
-- Common runtime exceptions
-- Common checked exceptions
-- Common errors
-- Overriding with exceptions
+- ~~Common runtime exceptions~~
+- ~~Common checked exceptions~~
+- ~~Common errors~~
+- ~~Overriding with exceptions~~
