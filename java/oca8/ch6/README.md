@@ -129,6 +129,21 @@ class Errors {
 }
 ```
 
+A given checked exception may not be caught when the try block never
+throws the exception.
+
+```java
+class TryCatchingCheckedNeverThrown {
+    public static void task() {
+        try {
+            System.out.println("I never throw IOException");
+        } catch(IOException e) { // error: exception IOException is never thrown in body of corresponding try statement
+            System.out.println("I am unreachable");
+        }
+    }
+}
+```
+
 ## Try-Catch-Finally statement
 
 Braces around each block of code are required.
